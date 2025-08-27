@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+</head>
+<body>
+    <div id="test">Loading...</div>
+    
+    <script>
+        console.log("Script loaded");
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM loaded");
+            
+            // Test API call
+            fetch("/api/channels")
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Channels:", data);
+                    document.getElementById("test").innerHTML = "Channels loaded: " + Object.keys(data).length;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("test").innerHTML = "Error: " + error.message;
+                });
+        });
+    </script>
+</body>
+</html>

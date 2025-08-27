@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Audio Test</title>
+</head>
+
+<body>
+    <h1>Audio File Test</h1>
+    <p>Testing: 20250825_215203_107_35_-_Daly_City.mp3</p>
+
+    <div>
+        <h3>Basic Audio Element</h3>
+        <audio controls preload="metadata" id="audio1">
+            <source src="/api/recording/20250825_215203_107_35_-_Daly_City.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <div id="status1">Loading...</div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <h3>Alternative Audio Element</h3>
+        <audio controls preload="auto" id="audio2">
+            <source src="/api/recording/20250825_215203_107_35_-_Daly_City.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <div id="status2">Loading...</div>
+    </div>
+
+    <script>
+        function setupAudioTest(audioId, statusId) {
+            const audio = document.getElementById(audioId);
+            const status = document.getElementById(statusId);
+
+            audio.addEventListener('loadstart', () => {
+                status.textContent = 'Started loading';
+            });
+
+            audio.addEventListener('loadedmetadata', () => {
+                status.textContent = `Metadata loaded - Duration: ${audio.duration.toFixed(2)}s`;
+            });
+
+            audio.addEventListener('canplay', () => {
+                status.textContent += ' - Can play';
+            });
+
+            audio.addEventListener('error', (e) => {
+                status.textContent = `Error: ${e.type} - ${audio.error ? audio.error.message : 'Unknown error'}`;
+            });
+
+            audio.addEventListener('stalled', () => {
+                status.textContent += ' - Stalled';
+            });
+
+            audio.addEventListener('suspend', () => {
+                status.textContent += ' - Suspended';
+            });
+        }
+
+        setupAudioTest('audio1', 'status1');
+        setupAudioTest('audio2', 'status2');
+    </script>
+</body>
+
+</html>

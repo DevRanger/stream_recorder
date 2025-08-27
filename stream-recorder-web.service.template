@@ -1,0 +1,37 @@
+[Unit]
+Description=Stream Recorder Web UI (Gunicorn)
+Documentation=https://github.com/your-repo/stream_recorder
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+User=__USER__
+Group=__GROUP__
+WorkingDirectory=__PROJECT_ROOT__
+Environment=PATH=__PROJECT_ROOT__/.venv/bin
+Environment=FLASK_ENV=production
+Environment=PORT=8000
+ExecStart=__PROJECT_ROOT__/scripts/start-web.sh --background
+ExecStop=__PROJECT_ROOT__/scripts/start-web.sh --stop
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+RestartSec=3
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__PROJECT_ROOT__
+ReadWritePaths=__PROJECT_ROOT__/logs
+ReadWritePaths=__PROJECT_ROOT__/audio_files
+
+# Resource limits
+LimitNOFILE=65535
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target

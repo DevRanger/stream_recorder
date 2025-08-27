@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test formatDateTimeForLA</title>
+</head>
+<body>
+    <h1>Testing formatDateTimeForLA Function</h1>
+    <div id="output"></div>
+
+    <script>
+        const LA_TIMEZONE = 'America/Los_Angeles';
+
+        function formatDateTimeForLA(timestamp) {
+            try {
+                // Parse timestamp in format YYYYMMDD_HHMMSS
+                const year = timestamp.substr(0, 4);
+                const month = timestamp.substr(4, 2);
+                const day = timestamp.substr(6, 2);
+                const hour = timestamp.substr(9, 2);
+                const minute = timestamp.substr(11, 2);
+                const second = timestamp.substr(13, 2);
+
+                const date = new Date(
+                    `${year}-${month}-${day}T${hour}:${minute}:${second}Z`
+                );
+                return date.toLocaleString("en-US", {
+                    timeZone: LA_TIMEZONE,
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true,
+                });
+            } catch (e) {
+                return `Error: ${e.message} for timestamp: ${timestamp}`;
+            }
+        }
+
+        // Test timestamps
+        const testTimestamps = [
+            "20250825_113225",
+            "20250825_112413",
+            "20250825_112818",
+            "20250825_120000"
+        ];
+
+        const output = document.getElementById('output');
+        testTimestamps.forEach(timestamp => {
+            const formatted = formatDateTimeForLA(timestamp);
+            output.innerHTML += `<p><strong>${timestamp}</strong> -> ${formatted}</p>`;
+        });
+    </script>
+</body>
+</html>

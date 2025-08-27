@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test</h1>
+    <button onclick="testAPI()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        console.log("Test script loaded");
+        
+        function testAPI() {
+            console.log("Testing API...");
+            fetch("/api/channels")
+                .then(response => {
+                    console.log("Response:", response);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Data received:", data);
+                    document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById('result').innerHTML = 'Error: ' + error.message;
+                });
+        }
+        
+        // Test immediately on load
+        window.onload = function() {
+            console.log("Page loaded, testing API...");
+            testAPI();
+        };
+    </script>
+</body>
+</html>

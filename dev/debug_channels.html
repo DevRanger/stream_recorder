@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Channels</title>
+</head>
+<body>
+    <h1>Channel Debug</h1>
+    <div id="debug-output"></div>
+    
+    <script>
+    async function debugChannels() {
+        try {
+            console.log("Starting debug...");
+            const response = await fetch('/api/channels');
+            console.log("Response status:", response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const channels = await response.json();
+            console.log("Channels received:", channels);
+            console.log("Number of channels:", Object.keys(channels).length);
+            
+            const output = document.getElementById('debug-output');
+            output.innerHTML = `
+                <h2>API Response Successful</h2>
+                <p>Number of channels: ${Object.keys(channels).length}</p>
+                <h3>Channels:</h3>
+                <ul>
+                    ${Object.entries(channels).map(([id, channel]) => 
+                        `<li>${id}: ${channel.name} (${channel.group})</li>`
+                    ).join('')}
+                </ul>
+            `;
+            
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('debug-output').innerHTML = `
+                <h2>Error Loading Channels</h2>
+                <p>Error: ${error.message}</p>
+            `;
+        }
+    }
+    
+    window.onload = debugChannels;
+    </script>
+</body>
+</html>
