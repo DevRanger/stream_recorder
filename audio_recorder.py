@@ -43,7 +43,7 @@ class AudioRecorder:
         self.chunk_duration = 30  # seconds - buffer size for processing
         self.min_transmission_length = 500  # ms (minimum 0.5 seconds)
         self.max_transmission_length = 30000  # ms (maximum 30 seconds)
-        self.silence_gap = 1000  # ms between transmissions
+        self.silence_gap = 4000  # ms between transmissions (4 seconds of silence before stopping)
 
         self.load_channels()
         self.ensure_output_directory()
