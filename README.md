@@ -1,21 +1,19 @@
 # Radio Stream Recorder
 
-A comprehensive Python application for recording and managing radio transmissions from multiple channels simultaneously.
+A comprehensive Python application for recording and managing radio transmissions from multiple channels simultaneously with advanced audio processing and web interface.
 
 ## Features
 
-- **Multi-Channel Recording**: Record from up to 25+ radio channels simultaneously
-- **Advanced Audio Processing**: Professional VAD, filtering, and real-time transmission detection
-- **High-Quality Audio**: FLAC archival format with lossless quality preservation
-- **Modern Format Support**: Full FLAC and MP3 playback support in web interface
-- **Intelligent Transmission Detection**: Frame-based VAD with hysteresis and pre-roll buffering
+- **Multi-Channel Recording**: Record from 25+ radio channels simultaneously
+- **High-Quality Audio**: MP3 format with advanced audio processing
+- **Intelligent Voice Detection**: Smart transmission detection with configurable silence gaps
 - **Web Interface**: Modern web UI for monitoring channels and managing recordings
 - **Automatic Cleanup**: Built-in temp file cleanup and configurable retention policies
-- **Real-time Monitoring**: Live status updates and channel health monitoring
 - **Batch Playback**: Select and play multiple recordings in sequence
 - **Time-based Filtering**: Filter recordings by date and time ranges
-- **Per-Channel Configuration**: Customize audio processing settings for each channel
-- **Cross-Browser Compatibility**: FLAC playback support across modern browsers
+- **Per-Channel Configuration**: Customize volume sensitivity for each channel
+- **Cross-Browser Compatibility**: Reliable audio playback across modern browsers
+- **Real-time Monitoring**: Live channel status and recording activity
 
 ## Quick Start
 
@@ -24,29 +22,44 @@ A comprehensive Python application for recording and managing radio transmission
    uv sync
    ```
 
-2. **Start the Application**:
+2. **Start Recording**:
+   ```bash
+   ./start_recording.py
+   ```
+
+3. **Start Web Interface**:
    ```bash
    uv run python main.py
    ```
 
-3. **Access Web Interface**:
+4. **Access Web Interface**:
    Open http://localhost:8000 in your browser
+
+## Recent Improvements
+
+- **Enhanced Voice Detection**: Configurable 4-second silence gap prevents premature recording stops
+- **Project Cleanup**: Removed redundant files and organized codebase
+- **Improved Documentation**: Comprehensive docs in `docs/` directory
+- **Better Testing**: Organized test suite in `dev/` and `tests/` directories
+- **Streamlined Configuration**: Simplified channel setup with volume sensitivity controls
 
 ## Project Structure
 
 ```
 stream_recorder/
-├── main.py                 # Main Flask application
-├── audio_recorder.py       # Core recording engine
-├── audio_manager.py        # Audio processing utilities
-├── config.py              # Configuration management
-├── radio_channels.json    # Channel definitions
-├── templates/             # Web interface templates
-├── static/               # Static web assets
-├── scripts/              # Utility scripts
-├── docs/                 # Documentation
-├── dev/                  # Development/testing tools
-└── audio_files/          # Recorded audio storage
+├── main.py                 # Main Flask web application
+├── audio_recorder.py       # Core recording engine with audio processing
+├── radio_channels.json     # Channel configuration and settings
+├── start_recording.py      # Recording daemon control
+├── stop_recording.py       # Stop recording processes
+├── templates/              # Web interface templates
+├── static/                 # Static web assets (CSS, JS)
+├── scripts/                # Utility and cleanup scripts
+├── docs/                   # Complete documentation
+├── dev/                    # Development and testing tools
+├── tests/                  # Unit tests
+├── archive/                # Historical files and legacy code
+└── audio_files/            # Recorded audio storage (organized by channel)
 ```
 
 ## Core Components
@@ -60,16 +73,19 @@ Flask web application providing:
 
 ### Audio Recording Engine (`audio_recorder.py`)
 Handles:
-- Multi-channel audio streaming
-- Transmission detection and filtering
-- Audio file processing with FFmpeg
+- Multi-channel audio streaming with concurrent processing
+- Voice activity detection and transmission filtering
+- Audio file processing and metadata creation
 - Automatic cleanup and maintenance
+- Per-channel volume sensitivity configuration
+- Configurable silence gaps (currently 4 seconds)
 
 ### Configuration (`radio_channels.json`)
 Defines radio channels with:
-- Channel names and identifiers
-- Stream URLs and audio parameters
-- Detection thresholds and settings
+- Channel names and stream URLs
+- Enable/disable flags for selective recording
+- Channel grouping for organization
+- Volume sensitivity settings per channel
 
 ## Usage
 
@@ -79,13 +95,14 @@ Defines radio channels with:
 - Use date/time filters to find specific recordings
 - Select multiple recordings for batch playback
 - Monitor real-time recording status
-- **FLAC and MP3 playback**: Modern browsers support high-quality FLAC audio natively
+- **MP3 audio playback**: Reliable streaming across all browsers
 
-### Audio Quality & Formats
-- **FLAC files**: New recordings use lossless FLAC format with rich metadata
-- **MP3 files**: Legacy recordings remain accessible
-- **Advanced processing**: Voice Activity Detection, filtering, and noise reduction
-- **Browser compatibility**: Automatic format detection and fallback support
+### Audio Quality & Processing
+- **MP3 format**: Optimized for web streaming and storage efficiency
+- **Voice Activity Detection**: Smart detection of actual transmissions
+- **Configurable silence gaps**: 4-second silence detection prevents false stops
+- **Volume sensitivity**: Per-channel sensitivity tuning
+- **Automatic filtering**: Removes background noise and short clips
 
 ### API Endpoints
 - `GET /api/channels` - List all channels
@@ -95,9 +112,10 @@ Defines radio channels with:
 - `GET /api/cleanup-status` - Cleanup statistics
 
 ### Command Line Scripts
-- `scripts/cleanup_old_recordings.sh` - Remove old recordings (7+ days)
-- `scripts/start_recording.sh` - Start recording daemon
-- `scripts/stop_recording.sh` - Stop recording daemon
+- `./start_recording.py` - Start recording daemon for all enabled channels
+- `./stop_recording.py` - Stop recording daemon and all processes
+- `cleanup_old_recordings.sh` - Remove old recordings (configurable retention)
+- `cleanup_temp.py` - Clean up temporary audio files
 
 ## Configuration
 
@@ -105,21 +123,24 @@ Defines radio channels with:
 Edit `radio_channels.json` to add/modify channels:
 ```json
 {
-  "Channel_Name": {
-    "name": "Friendly Name",
-    "stream_url": "http://stream.url/path",
-    "silence_threshold": -50,
-    "silence_gap": 2.0
-  }
+  "channels": [
+    {
+      "name": "Channel Name",
+      "url": "https://stream.url/path",
+      "enabled": true,
+      "group": "Category",
+      "volume_sensitivity": 0.01
+    }
+  ]
 }
 ```
 
 ### Audio Settings
 Key parameters in `audio_recorder.py`:
-- `SILENCE_THRESHOLD`: dB level for silence detection
-- `SILENCE_GAP`: seconds of silence between transmissions
-- `MIN_TRANSMISSION_LENGTH`: minimum recording duration
-- `MAX_TRANSMISSION_LENGTH`: maximum recording duration
+- `silence_gap`: 4000ms (4 seconds of silence before stopping recording)
+- `min_transmission_length`: 500ms (minimum recording duration)
+- `max_transmission_length`: 45000ms (maximum recording duration)
+- `volume_sensitivity`: Per-channel sensitivity (in radio_channels.json)
 
 ## Automated Maintenance
 
@@ -140,21 +161,23 @@ Set up automated cleanup with cron:
 ### Running Tests
 ```bash
 cd dev/
-python test_channels.py
-python test_voice_detection.py
+uv run python test_channels.py
+uv run python test_voice_detection.py
 ```
 
 ### Debug Tools
 - `dev/debug_recording.py` - Audio processing debugging
+- `dev/test_*.py` - Backend component testing
 - `dev/test_*.html` - Frontend component testing
 - `dev/channel_health_monitor.py` - Channel monitoring utilities
 
 ## Requirements
 
 - Python 3.11+
+- uv (Python package manager)
 - FFmpeg (for audio processing)
 - Network access to radio stream URLs
-- Sufficient storage for audio files
+- Sufficient storage for audio files (MP3 format)
 
 ## Dependencies
 
@@ -163,6 +186,7 @@ See `pyproject.toml` for complete dependency list. Key packages:
 - pydub (audio processing)
 - requests (HTTP client)
 - threading (concurrent processing)
+- numpy (audio analysis)
 
 ## License
 
