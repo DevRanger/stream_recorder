@@ -1,0 +1,274 @@
+{
+  "channels": [
+    {
+      "name": "CWMA",
+      "url": "https://cast1.sql2.smrn.com:443/5914/",
+      "enabled": true,
+      "group": "Tactical Operations",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Tac-1",
+      "url": "https://cast1.sql2.smrn.com:443/5911/",
+      "enabled": true,
+      "group": "Tactical Operations",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Tac-2",
+      "url": "https://cast1.sql2.smrn.com:443/5912/",
+      "enabled": true,
+      "group": "Tactical Operations",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Tac-3",
+      "url": "https://cast1.sql2.smrn.com:443/5913/",
+      "enabled": true,
+      "group": "Tactical Operations",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "18 - EPA",
+      "url": "https://cast1.sql2.smrn.com:443/5181/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "20 - Menlo Park",
+      "url": "https://cast1.sql2.smrn.com:443/5201/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.5,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "21 - Atherton",
+      "url": "https://cast1.sql2.smrn.com:443/5211/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "22 - Redwood City",
+      "url": "https://cast1.sql2.smrn.com:443/5221/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "24 - Belmont",
+      "url": "https://cast1.sql2.smrn.com:443/5241/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "25 - San Mateo",
+      "url": "https://cast1.sql2.smrn.com:443/7415/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "2 - Sheriff",
+      "url": "https://cast1.sql2.smrn.com:443/5901/",
+      "enabled": true,
+      "group": "Sheriff's Office and CHP",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "2 - Sheriff",
+      "url": "https://cast1.sql2.smrn.com:443/5902/",
+      "enabled": true,
+      "group": "Sheriff's Office and CHP",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "CHP",
+      "url": "https://cast1.sql2.smrn.com:443/7429/",
+      "enabled": true,
+      "group": "Sheriff's Office and CHP",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "CHP",
+      "url": "https://cast1.sql2.smrn.com:443/7420/",
+      "enabled": true,
+      "group": "Sheriff's Office and CHP",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "26 - Foster City",
+      "url": "https://cast1.sql2.smrn.com:443/5261/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "27 - Hillsborough",
+      "url": "https://cast1.sql2.smrn.com:443/5271/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "28 - Burlingame",
+      "url": "https://cast1.sql2.smrn.com:443/5281/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "30 - San Bruno",
+      "url": "https://cast1.sql2.smrn.com:443/5301/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "31 - SSF",
+      "url": "https://cast1.sql2.smrn.com:443/5311/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "35 - Daly City",
+      "url": "https://cast1.sql2.smrn.com:443/5351/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "36 - Pacifica",
+      "url": "https://cast1.sql2.smrn.com:443/5361/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Newark",
+      "url": "https://cast1.sql2.smrn.com:443/6010/",
+      "enabled": true,
+      "group": "Police",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Fire - Control-1",
+      "url": "https://cast1.sql2.smrn.com/7401/",
+      "enabled": true,
+      "group": "Fire",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Fire - Control-2",
+      "url": "https://cast1.sql2.smrn.com/7407/",
+      "enabled": true,
+      "group": "Fire",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Fire - Control-3",
+      "url": "https://cast1.sql2.smrn.com/7402/",
+      "enabled": true,
+      "group": "Fire",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Airport",
+      "url": "https://cast1.sql2.smrn.com/7430/",
+      "enabled": true,
+      "group": "Miscellaneous",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "CalTrain",
+      "url": "https://cast1.sql2.smrn.com/5915/",
+      "enabled": true,
+      "group": "Miscellaneous",
+      "gain": 1.0,
+      "noiseGate": {
+        "enabled": true
+      }
+    }
+  ]
+}

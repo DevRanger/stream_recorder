@@ -5,31 +5,33 @@ This directory contains all operational scripts for the Police Radio Stream Reco
 ## Operational Scripts
 
 ### Shell Scripts (.sh)
+
 - **`start_recording.sh`** - Main recording control script with daemon support
   - Usage: `./start_recording.sh [--background|--daemon] [--stop] [--status] [--help]`
   - Features: Foreground/background modes, PID management, status monitoring
-  
 - **`start-web.sh`** - Web UI control script with Gunicorn support
   - Usage: `./start-web.sh [--background|--daemon] [--stop] [--status] [--help]`
   - Features: Production-ready Gunicorn server, daemon mode, status monitoring
-  
 - **`stop_recording.sh`** - Simple stop script (legacy, use start_recording.sh --stop instead)
   - Usage: `./stop_recording.sh`
-  
 - **`start-dev.sh`** - Development web server launcher
   - Usage: `./start-dev.sh`
   - Starts Flask development server on port 8000
-  
 - **`cleanup_old_recordings.sh`** - Automated cleanup of old recordings
   - Usage: `./cleanup_old_recordings.sh`
   - Removes MP3 and JSON files older than 7 days from project root audio_files directory
   - Suitable for cron jobs, logs to project root cleanup.log
+- **`cleanup_temp_files.sh`** - Clean up temporary audio files
+  - Usage: `./cleanup_temp_files.sh` (removes temp files older than 1 hour)
+  - Usage: `./cleanup_temp_files.sh force` (removes ALL temp files)
+  - Helpful for cleaning up orphaned temp files from interrupted recordings
 
 - **`install-systemd-service.sh`** - Systemd service installer for web UI
   - Usage: `./install-systemd-service.sh`
   - Installs web UI as systemd service for production deployment
 
 ### Python Scripts (.py)
+
 - **`start_recording.py`** - Main recording application entry point
 - **`stop_recording.py`** - Recording stop functionality
 
@@ -40,7 +42,7 @@ From the project root, you can use `./recorder.sh` for unified access:
 ```bash
 # Master control (recommended)
 ./recorder.sh start --background    # Start recording (daemon)
-./recorder.sh status                # Check recording status  
+./recorder.sh status                # Check recording status
 ./recorder.sh stop                  # Stop recording
 ./recorder.sh web --background      # Start web UI (daemon)
 ./recorder.sh web-status            # Check web UI status

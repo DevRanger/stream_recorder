@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAC Playback Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        .test-section {
+            background-color: #34495e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        audio {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background-color: #27ae60; }
+        .error { background-color: #e74c3c; }
+        .info { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <h1>🎵 FLAC Playback Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Direct FLAC File</h2>
+        <p>Testing direct FLAC file playback from the API:</p>
+        <audio controls>
+            <source src="/api/recording/20250828_144433_489_25_-_San_Mateo.flac" type="audio/flac">
+            <source src="/api/recording/20250828_144433_489_25_-_San_Mateo.flac" type="audio/x-flac">
+            Your browser does not support FLAC audio.
+        </audio>
+        <div id="result1" class="result info">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: MP3 Fallback</h2>
+        <p>Testing if we can still play MP3 files:</p>
+        <audio controls>
+            <source src="/api/recording/20250825_135923_241_18_-_EPA.mp3" type="audio/mpeg">
+            <source src="/api/recording/20250825_135923_241_18_-_EPA.mp3" type="audio/mp3">
+            Your browser does not support MP3 audio.
+        </audio>
+        <div id="result2" class="result info">Loading...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Browser FLAC Support Detection</h2>
+        <div id="browser-support" class="result info">Checking...</div>
+    </div>
+
+    <script>
+        // Test browser FLAC support
+        function checkFLACSupport() {
+            const audio = document.createElement('audio');
+            const supportDiv = document.getElementById('browser-support');
+            
+            const flacSupport = audio.canPlayType('audio/flac');
+            const xFlacSupport = audio.canPlayType('audio/x-flac');
+            
+            let message = 'Browser FLAC Support:<br>';
+            message += `audio/flac: ${flacSupport || 'No support'}<br>`;
+            message += `audio/x-flac: ${xFlacSupport || 'No support'}`;
+            
+            if (flacSupport || xFlacSupport) {
+                supportDiv.className = 'result success';
+                message += '<br><strong>✅ FLAC playback should work!</strong>';
+            } else {
+                supportDiv.className = 'result error';
+                message += '<br><strong>❌ FLAC playback may not work in this browser</strong>';
+            }
+            
+            supportDiv.innerHTML = message;
+        }
+
+        // Test audio loading
+        function setupAudioTests() {
+            const audio1 = document.querySelector('.test-section:nth-child(2) audio');
+            const audio2 = document.querySelector('.test-section:nth-child(3) audio');
+            const result1 = document.getElementById('result1');
+            const result2 = document.getElementById('result2');
+
+            // Test 1: FLAC
+            audio1.addEventListener('loadeddata', function() {
+                result1.className = 'result success';
+                result1.textContent = '✅ FLAC file loaded successfully!';
+            });
+            
+            audio1.addEventListener('error', function(e) {
+                result1.className = 'result error';
+                result1.textContent = `❌ FLAC file failed to load: ${e.target.error?.message || 'Unknown error'}`;
+            });
+
+            // Test 2: MP3
+            audio2.addEventListener('loadeddata', function() {
+                result2.className = 'result success';
+                result2.textContent = '✅ MP3 file loaded successfully!';
+            });
+            
+            audio2.addEventListener('error', function(e) {
+                result2.className = 'result error';
+                result2.textContent = `❌ MP3 file failed to load: ${e.target.error?.message || 'Unknown error'}`;
+            });
+        }
+
+        // Initialize tests
+        document.addEventListener('DOMContentLoaded', function() {
+            checkFLACSupport();
+            setupAudioTests();
+        });
+    </script>
+</body>
+</html>

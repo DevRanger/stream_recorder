@@ -11,8 +11,8 @@ def main():
     # Create AudioRecorder instance
     recorder = AudioRecorder()
     
-    # Clean up all temp files
-    removed_count = recorder.cleanup_all_temp_files()
+    # Clean up all temp files (force cleanup regardless of age)
+    removed_count = recorder.cleanup_temp_files(max_age_hours=0)
     
     print(f"Cleanup complete: removed {removed_count} temporary files")
 

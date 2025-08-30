@@ -99,7 +99,19 @@ uv run python dev/cleanup_temp.py
 
 # Quick development setup
 uv run python dev/quick_start.py
+
+# Audio processing tests (use preferred channels)
+uv run python dev/test_audio_processing.py quick      # SSF channel test
+uv run python dev/test_audio_processing.py standard   # SSF + EPA test
+uv run python dev/test_audio_processing.py full       # All preferred channels
 ```
+
+### Preferred Test Channels
+For consistent testing, always use these channels:
+- **31_-_SSF** (South San Francisco) - Primary test channel
+- **18_-_EPA** (East Palo Alto) - Secondary test channel  
+- **25_-_San_Mateo** (San Mateo) - Mixed transmission testing
+- **35_-_Daly_City** (Daly City) - Signal quality testing
 
 ### Maintenance Tasks
 ```bash

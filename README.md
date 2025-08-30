@@ -5,13 +5,17 @@ A comprehensive Python application for recording and managing radio transmission
 ## Features
 
 - **Multi-Channel Recording**: Record from up to 25+ radio channels simultaneously
-- **Intelligent Transmission Detection**: Automatically detects and records only actual transmissions
-- **High-Quality Audio**: Preserves original audio quality using FFmpeg stream copy
+- **Advanced Audio Processing**: Professional VAD, filtering, and real-time transmission detection
+- **High-Quality Audio**: FLAC archival format with lossless quality preservation
+- **Modern Format Support**: Full FLAC and MP3 playback support in web interface
+- **Intelligent Transmission Detection**: Frame-based VAD with hysteresis and pre-roll buffering
 - **Web Interface**: Modern web UI for monitoring channels and managing recordings
 - **Automatic Cleanup**: Built-in temp file cleanup and configurable retention policies
 - **Real-time Monitoring**: Live status updates and channel health monitoring
 - **Batch Playback**: Select and play multiple recordings in sequence
 - **Time-based Filtering**: Filter recordings by date and time ranges
+- **Per-Channel Configuration**: Customize audio processing settings for each channel
+- **Cross-Browser Compatibility**: FLAC playback support across modern browsers
 
 ## Quick Start
 
@@ -75,6 +79,13 @@ Defines radio channels with:
 - Use date/time filters to find specific recordings
 - Select multiple recordings for batch playback
 - Monitor real-time recording status
+- **FLAC and MP3 playback**: Modern browsers support high-quality FLAC audio natively
+
+### Audio Quality & Formats
+- **FLAC files**: New recordings use lossless FLAC format with rich metadata
+- **MP3 files**: Legacy recordings remain accessible
+- **Advanced processing**: Voice Activity Detection, filtering, and noise reduction
+- **Browser compatibility**: Automatic format detection and fallback support
 
 ### API Endpoints
 - `GET /api/channels` - List all channels

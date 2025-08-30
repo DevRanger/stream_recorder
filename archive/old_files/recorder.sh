@@ -56,39 +56,6 @@ SCRIPT LOCATIONS:
 EOF
 }
 
-# Show recording status
-show_recording_status() {
-    print_color $BLUE "🔍 Checking Recording Status..."
-    echo ""
-    
-    # Check if recording process is running
-    if pgrep -f "start_recording.py" > /dev/null; then
-        local pid=$(pgrep -f "start_recording.py")
-        print_color $GREEN "✅ Recording is RUNNING (PID: $pid)"
-        
-        # Show recent log entries if available
-        if [[ -f "$SCRIPT_DIR/recording.log" ]]; then
-            echo ""
-            print_color $YELLOW "📄 Recent log entries:"
-            tail -5 "$SCRIPT_DIR/recording.log" | sed 's/^/    /'
-        fi
-    else
-        print_color $RED "❌ Recording is NOT running"
-        echo ""
-        print_color $YELLOW "💡 To start recording, run: $0 start"
-    fi
-    
-    echo ""
-    
-    # Check temp files
-    local temp_count=$(find "$SCRIPT_DIR/audio_files" -name "temp_*" -type f 2>/dev/null | wc -l)
-    if [[ $temp_count -gt 0 ]]; then
-        print_color $YELLOW "📁 Active temp files: $temp_count"
-    else
-        print_color $BLUE "📁 No active temp files"
-    fi
-}
-
 # Execute the appropriate script
 case "$1" in
     "start")
@@ -102,7 +69,7 @@ case "$1" in
         "$SCRIPTS_DIR/stop_recording.sh"
         ;;
     "status")
-        show_recording_status
+        "$SCRIPTS_DIR/start_recording.sh" --status
         ;;
     "web")
         if [[ "$2" == "--background" || "$2" == "--daemon" ]]; then

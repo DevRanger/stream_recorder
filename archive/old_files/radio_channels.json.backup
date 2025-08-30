@@ -1,0 +1,472 @@
+{
+  "channels": [
+    {
+      "name": "CWMA",
+      "url": "https://cast1.sql2.smrn.com:443/5914/",
+      "color": "green",
+      "tag": "",
+      "gain": 1.0,
+      "group": "Tactical Operations",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      },
+      "vad": {
+        "energy_threshold": 6e-06,
+        "zcr_min": 0.05,
+        "zcr_max": 0.35,
+        "speech_frames_to_start": 5,
+        "hang_time_ms": 400,
+        "min_transmission_ms": 1500,
+        "max_transmission_ms": 30000
+      }
+    },
+    {
+      "name": "Tac-1",
+      "url": "https://cast1.sql2.smrn.com:443/5911/",
+      "color": "green",
+      "tag": "",
+      "gain": 1.0,
+      "group": "Tactical Operations",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "Tac-2",
+      "url": "https://cast1.sql2.smrn.com:443/5912/",
+      "color": "green",
+      "tag": "",
+      "gain": 1.0,
+      "group": "Tactical Operations",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "Tac-3",
+      "url": "https://cast1.sql2.smrn.com:443/5913/",
+      "color": "green",
+      "tag": "",
+      "gain": 1.0,
+      "group": "Tactical Operations",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "18 - EPA",
+      "url": "https://cast1.sql2.smrn.com:443/5181/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -42,
+        "ratio": 6,
+        "attack": 0.005,
+        "release": 0.3
+      },
+      "vad": {
+        "energy_threshold": 9e-06,
+        "zcr_min": 0.08,
+        "zcr_max": 0.32,
+        "speech_frames_to_start": 7,
+        "hang_time_ms": 350,
+        "min_transmission_ms": 2200,
+        "max_transmission_ms": 30000
+      },
+      "transmission": {
+        "silence_threshold": -47,
+        "min_length": 600,
+        "max_length": 15000,
+        "silence_gap": 400
+      }
+    },
+    {
+      "name": "20 - Menlo Park",
+      "url": "https://cast1.sql2.smrn.com:443/5201/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.5,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -50,
+        "ratio": 2,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "21 - Atherton",
+      "url": "https://cast1.sql2.smrn.com:443/5211/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "22 - Redwood City",
+      "url": "https://cast1.sql2.smrn.com:443/5221/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -30,
+        "ratio": 4,
+        "attack": 0.005,
+        "release": 0.3
+      },
+      "transmission": {
+        "silence_threshold": -30,
+        "min_length": 600,
+        "max_length": 15000,
+        "silence_gap": 400
+      }
+    },
+    {
+      "name": "24 - Belmont",
+      "url": "https://cast1.sql2.smrn.com:443/5241/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "25 - San Mateo",
+      "url": "https://cast1.sql2.smrn.com:443/7415/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "2 - Sheriff",
+      "url": "https://cast1.sql2.smrn.com:443/5901/",
+      "color": "tan",
+      "tag": "PATPRI-1",
+      "gain": 1.0,
+      "group": "Sheriff's Office and CHP",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      },
+      "vad": {
+        "energy_threshold": 7e-06,
+        "zcr_min": 0.06,
+        "zcr_max": 0.38,
+        "speech_frames_to_start": 6,
+        "hang_time_ms": 400,
+        "min_transmission_ms": 1800,
+        "max_transmission_ms": 30000
+      },
+      "transmission": {
+        "silence_threshold": -47,
+        "min_length": 600,
+        "max_length": 15000,
+        "silence_gap": 400
+      }
+    },
+    {
+      "name": "2 - Sheriff",
+      "url": "https://cast1.sql2.smrn.com:443/5902/",
+      "color": "tan",
+      "tag": "PATPRI-2",
+      "gain": 1.0,
+      "group": "Sheriff's Office and CHP",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "CHP",
+      "url": "https://cast1.sql2.smrn.com:443/7429/",
+      "color": "tan",
+      "tag": "Pink",
+      "gain": 1.0,
+      "group": "Sheriff's Office and CHP",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -40,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "CHP",
+      "url": "https://cast1.sql2.smrn.com:443/7420/",
+      "color": "tan",
+      "tag": "Amber",
+      "gain": 1.0,
+      "group": "Sheriff's Office and CHP",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -40,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "26 - Foster City",
+      "url": "https://cast1.sql2.smrn.com:443/5261/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "27 - Hillsborough",
+      "url": "https://cast1.sql2.smrn.com:443/5271/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "28 - Burlingame",
+      "url": "https://cast1.sql2.smrn.com:443/5281/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "30 - San Bruno",
+      "url": "https://cast1.sql2.smrn.com:443/5301/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      },
+      "vad": {
+        "energy_threshold": 1.5e-05,
+        "zcr_min": 0.1,
+        "zcr_max": 0.28,
+        "speech_frames_to_start": 10,
+        "hang_time_ms": 250,
+        "min_transmission_ms": 3000,
+        "max_transmission_ms": 30000
+      }
+    },
+    {
+      "name": "31 - SSF",
+      "url": "https://cast1.sql2.smrn.com:443/5311/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "35 - Daly City",
+      "url": "https://cast1.sql2.smrn.com:443/5351/",
+      "color": "blue",
+      "tag": "PD-1 & 2",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "36 - Pacifica",
+      "url": "https://cast1.sql2.smrn.com:443/5361/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "Newark",
+      "url": "https://cast1.sql2.smrn.com:443/6010/",
+      "color": "blue",
+      "tag": "PD-1",
+      "gain": 1.0,
+      "group": "Police",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "Fire - Control-1",
+      "url": "https://cast1.sql2.smrn.com/7401/",
+      "color": "red",
+      "tag": "South Zone",
+      "gain": 1.0,
+      "group": "Fire",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -42,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      },
+      "vad": {
+        "energy_threshold": 6.5e-06,
+        "zcr_min": 0.06,
+        "zcr_max": 0.4,
+        "speech_frames_to_start": 5,
+        "hang_time_ms": 450,
+        "min_transmission_ms": 1200,
+        "max_transmission_ms": 30000
+      }
+    },
+    {
+      "name": "Fire - Control-2",
+      "url": "https://cast1.sql2.smrn.com/7407/",
+      "color": "red",
+      "tag": "Central Zone",
+      "gain": 1.0,
+      "group": "Fire",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -42,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "Fire - Control-3",
+      "url": "https://cast1.sql2.smrn.com/7402/",
+      "color": "red",
+      "tag": "North Zone",
+      "gain": 1.0,
+      "group": "Fire",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -42,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "Airport",
+      "url": "https://cast1.sql2.smrn.com/7430/",
+      "color": "#ffffff",
+      "tag": "San Carlos",
+      "gain": 1.0,
+      "group": "Miscellaneous",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    },
+    {
+      "name": "CalTrain",
+      "url": "https://cast1.sql2.smrn.com/5915/",
+      "color": "#ffffff",
+      "tag": "Peninsula",
+      "gain": 1.0,
+      "group": "Miscellaneous",
+      "noiseGate": {
+        "enabled": true,
+        "threshold": -43,
+        "ratio": 3,
+        "attack": 0.005,
+        "release": 0.3
+      }
+    }
+  ]
+}

@@ -14,6 +14,7 @@ env/
 # Audio files (recordings)
 audio_files/
 *.mp3
+*.flac
 *.wav
 *.json
 

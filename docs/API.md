@@ -254,4 +254,6 @@ CORS is enabled for local development. For production use, configure appropriate
 
 - Request: `application/json` for POST/PUT requests
 - Response: `application/json` for API endpoints
-- Audio files: `audio/mpeg` for MP3 recordings
+- Audio files: 
+  - `audio/flac` for FLAC recordings
+  - `audio/mpeg` for MP3 recordings

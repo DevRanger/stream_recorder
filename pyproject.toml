@@ -1,20 +1,70 @@
 [project]
 name = "stream-recorder"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Radio stream recorder with simplified RMS-based audio detection and FLAC output"
 readme = "README.md"
+authors = [
+    {name = "Stream Recorder Project"}
+]
+license = {text = "MIT"}
 requires-python = ">=3.11"
+keywords = ["radio", "audio", "recording", "streaming", "scanner"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Capture/Recording",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+
 dependencies = [
     "flask>=3.1.2",
     "gunicorn>=23.0.0",
-    "numpy>=2.3.2",
+    "numpy>=2.0.0",
     "pydub>=0.25.1",
-    "requests>=2.32.5",
-    "scipy>=1.16.1",
+    "requests>=2.32.0",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
+production = [
+    "gunicorn>=23.0.0",
+]
+
 dev = [
     "flask-testing>=0.8.1",
     "pytest>=8.4.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/daryljones/stream_recorder"
+Documentation = "https://github.com/daryljones/stream_recorder/blob/main/README.md"
+Repository = "https://github.com/daryljones/stream_recorder"
+Issues = "https://github.com/daryljones/stream_recorder/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "main.py"
+pattern = "__version__ = ['\"](?P<version>[^'\"]*)['\"]"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+exclude = [
+    "audio_files/",
+    "logs/",
+    "archive/",
+    "__pycache__/",
+    "*.pyc",
+    "*.pyo",
+    "*.log",
+    ".git/",
+    ".venv/",
+    ".pytest_cache/",
 ]

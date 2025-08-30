@@ -932,6 +932,8 @@
           (s) => s.recording
         ).length;
 
+        console.log(`Status update: ${recordingChannels} recording channels`);
+
         // Update system status
         const systemStatus = document.getElementById("systemStatus");
         const systemStatusText = document.getElementById("systemStatusText");
@@ -945,18 +947,45 @@
         }
 
         // Update active channels count
-        document.getElementById("activeChannels").textContent =
-          recordingChannels;
+        const activeChannelsElement = document.getElementById("activeChannels");
+        console.log(`Updating activeChannels element with: ${recordingChannels}`);
+        if (activeChannelsElement) {
+          activeChannelsElement.textContent = recordingChannels;
+        } else {
+          console.error("activeChannels element not found!");
+        }
 
-        // Update total recordings count (this would need a separate API endpoint in real implementation)
-        // For now, just showing active channels
-        document.getElementById("totalRecordings").textContent = "N/A";
+        // Update total recordings count for today
+        updateTodaysRecordingCount();
       } catch (error) {
         console.error("Error updating status:", error);
         const systemStatus = document.getElementById("systemStatus");
         const systemStatusText = document.getElementById("systemStatusText");
         systemStatus.className = "status-indicator status-idle";
         systemStatusText.textContent = "Connection Error";
+        
+        // Also update active channels and total recordings to show error state
+        const activeChannelsElement = document.getElementById("activeChannels");
+        if (activeChannelsElement) {
+          activeChannelsElement.textContent = "N/A";
+        }
+        document.getElementById("totalRecordings").textContent = "Error";
+      }
+    }
+
+    async function updateTodaysRecordingCount() {
+      try {
+        const response = await fetch("/api/stats");
+        const stats = await response.json();
+        
+        if (stats.total && typeof stats.total.today === 'number') {
+          document.getElementById("totalRecordings").textContent = stats.total.today;
+        } else {
+          document.getElementById("totalRecordings").textContent = "0";
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+        document.getElementById("totalRecordings").textContent = "N/A";
       }
     }
 
@@ -1317,6 +1346,24 @@
       }
     };
 
+    function getAudioSources(filename) {
+      // Generate appropriate audio source tags based on file extension
+      const fileExtension = filename.toLowerCase().split('.').pop();
+      const baseSrc = `/api/recording/${filename}`;
+      
+      if (fileExtension === 'flac') {
+        return `<source src="${baseSrc}" type="audio/flac">
+                <source src="${baseSrc}" type="audio/x-flac">`;
+      } else if (fileExtension === 'mp3') {
+        return `<source src="${baseSrc}" type="audio/mpeg">
+                <source src="${baseSrc}" type="audio/mp3">`;
+      } else {
+        // Default fallback for unknown extensions
+        return `<source src="${baseSrc}" type="audio/mpeg">
+                <source src="${baseSrc}" type="audio/mp3">`;
+      }
+    }
+
     function playRecording(filename, channelName) {
       // Create a modal or popup with audio player
       const audioModal = document.createElement("div");
@@ -1333,7 +1380,7 @@
                         <p style="margin-bottom: 15px; color: #bdc3c7;">${filename}</p>
                         <div id="audio-status" style="margin-bottom: 10px; color: #3498db; font-size: 14px;">Loading audio...</div>
                         <audio controls preload="metadata" class="audio-player" id="audio-player-${Date.now()}">
-                            <source src="/api/recording/${filename}" type="audio/mpeg">
+                            ${getAudioSources(filename)}
                             Your browser does not support the audio element.
                         </audio>
                     </div>
@@ -1572,7 +1619,7 @@
             <p><strong>Playing ${currentPlaybackIndex + 1} of ${batchPlaybackQueue.length}:</strong></p>
             <p style="word-break: break-all; font-size: 0.9em; color: #666;">${filename}</p>
             <audio controls autoplay style="width: 100%; margin: 15px 0;">
-              <source src="/api/recording/${filename}" type="audio/mpeg">
+              ${getAudioSources(filename)}
               Your browser does not support the audio element.
             </audio>
             <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: space-between;">

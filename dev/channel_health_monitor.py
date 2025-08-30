@@ -37,7 +37,7 @@ def analyze_channel_health():
         cutoff_time = now - timedelta(hours=24)
 
         for file in os.listdir(channel_dir):
-            if file.endswith(".mp3") and not file.startswith("temp_"):
+            if (file.endswith(".mp3") or file.endswith(".flac")) and not file.startswith("temp_"):
                 file_path = os.path.join(channel_dir, file)
                 file_time = datetime.fromtimestamp(os.path.getmtime(file_path))
                 if file_time > cutoff_time:

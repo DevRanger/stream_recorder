@@ -62,7 +62,7 @@ DAYS_OLD=7  # Change this number to adjust retention days
 
 ## Safety Features
 - Only removes files in the `audio_files` directory
-- Only targets `.mp3` and `*_metadata.json` files
+- Only targets `.mp3`, `.flac`, and `*_metadata.json` files
 - Uses `-mtime +7` to ensure files are actually older than 7 full days
 - Comprehensive logging of all actions
 - Graceful error handling
