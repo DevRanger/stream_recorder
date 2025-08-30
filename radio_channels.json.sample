@@ -1,0 +1,11 @@
+{
+  "channels": [
+    {
+      "name": "Fire - Control-1",
+      "url": "https://cast1.sql2.smrn.com/7401/",
+      "enabled": true,
+      "group": "Fire",
+      "volume_sensitivity": 0.01
+    }
+  ]
+}
