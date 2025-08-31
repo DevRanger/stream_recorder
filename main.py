@@ -6,7 +6,6 @@ Simplified audio recording system with RMS-based detection and FLAC output
 __version__ = "1.0.0"
 
 from flask import Flask, render_template, jsonify, request, send_file
-from config import config
 import os
 from audio_recorder import AudioRecorder
 
@@ -14,13 +13,12 @@ from audio_recorder import AudioRecorder
 audio_recorder = AudioRecorder()
 
 
-def create_app(config_name=None):
+def create_app():
     app = Flask(__name__)
-
-    if config_name is None:
-        config_name = os.environ.get("FLASK_ENV", "default")
-
-    app.config.from_object(config[config_name])
+    
+    # Simple configuration
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+    app.config['DEBUG'] = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
 
     @app.route("/")
     def index():
