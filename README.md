@@ -5,15 +5,21 @@ A comprehensive Python application for recording and managing radio transmission
 ## Features
 
 - **Multi-Channel Recording**: Record from 25+ radio channels simultaneously
-- **High-Quality Audio**: MP3 format with advanced audio processing
+- **High-Quality Audio**: FLAC format with advanced audio processing
 - **Intelligent Voice Detection**: Smart transmission detection with configurable silence gaps
 - **Web Interface**: Modern web UI for monitoring channels and managing recordings
+- **Modal Recording Browser**: Detailed modal windows with recording lists for each channel
+- **Batch Operations**: 
+  - Select and play multiple recordings in sequence
+  - Concatenate and download multiple recordings as single FLAC file
+  - Chronological sorting (oldest to newest)
+- **Refresh Functionality**: Real-time refresh of recording lists in modal windows
+- **Time-based Filtering**: Filter recordings by date and time ranges with accurate timezone display
 - **Automatic Cleanup**: Built-in temp file cleanup and configurable retention policies
-- **Batch Playback**: Select and play multiple recordings in sequence
-- **Time-based Filtering**: Filter recordings by date and time ranges
 - **Per-Channel Configuration**: Customize volume sensitivity for each channel
 - **Cross-Browser Compatibility**: Reliable audio playback across modern browsers
 - **Real-time Monitoring**: Live channel status and recording activity
+- **Production Ready**: Deployment-agnostic with absolute path handling
 
 ## Quick Start
 
@@ -37,6 +43,21 @@ A comprehensive Python application for recording and managing radio transmission
 
 ## Recent Improvements
 
+### Latest Updates (August 2025)
+- **Modal Window Enhancements**: 
+  - Added refresh button to update recording lists in real-time
+  - Fixed timezone display issues - timestamps now show correct local time
+  - Improved modal header with better control layout
+- **Batch Download Feature**: 
+  - "Download Selected" button for concatenating multiple recordings
+  - Automatic chronological sorting (oldest to newest)
+  - Single FLAC output with descriptive filenames
+  - Progress indicators and error handling
+- **Production Compatibility**: 
+  - Fixed hardcoded paths for deployment flexibility
+  - Works correctly regardless of working directory
+  - Container and service-ready deployment
+- **FLAC Audio Format**: Upgraded from MP3 to lossless FLAC format
 - **Enhanced Voice Detection**: Configurable 4-second silence gap prevents premature recording stops
 - **Project Cleanup**: Removed redundant files and organized codebase
 - **Improved Documentation**: Comprehensive docs in `docs/` directory
@@ -89,13 +110,20 @@ Defines radio channels with:
 
 ## Usage
 
+## Usage
+
 ### Web Interface
-- Browse channels in the main table
-- Click channel names to view recordings
-- Use date/time filters to find specific recordings
-- Select multiple recordings for batch playback
-- Monitor real-time recording status
-- **MP3 audio playback**: Reliable streaming across all browsers
+- **Channel Overview**: Browse channels in the main table with real-time status
+- **Modal Recording Browser**: Click channel names to open detailed recording lists
+- **Date/Time Filtering**: Use filters to find recordings within specific time ranges
+- **Batch Operations**: 
+  - Select multiple recordings with checkboxes
+  - **Batch Playback**: Play selected recordings in chronological sequence
+  - **Batch Download**: Concatenate and download multiple recordings as single FLAC file
+- **Real-time Updates**: Use refresh button in modal windows to update recording lists
+- **FLAC Audio Playback**: High-quality lossless audio streaming across all browsers
+- **Accurate Timestamps**: All times displayed in correct local timezone (PDT)
+- **Progress Feedback**: Visual indicators for processing operations
 
 ### Audio Quality & Processing
 - **MP3 format**: Optimized for web streaming and storage efficiency
@@ -106,10 +134,13 @@ Defines radio channels with:
 
 ### API Endpoints
 - `GET /api/channels` - List all channels
-- `GET /api/recordings/channel/{name}` - Get channel recordings
-- `GET /api/status` - System status
-- `POST /api/cleanup-temp` - Manual cleanup
-- `GET /api/cleanup-status` - Cleanup statistics
+- `GET /api/recordings/channel/{name}` - Get channel recordings with date/time filtering
+- `GET /api/recording/{filename}` - Download individual recording file
+- `POST /api/recordings/concatenate` - Concatenate multiple recordings into single FLAC file
+- `GET /api/status` - System status and recording activity
+- `GET /api/stats` - Recording statistics and storage information
+- `POST /api/cleanup-temp` - Manual cleanup of temporary files
+- `GET /api/cleanup-status` - Cleanup statistics and temporary file counts
 
 ### Command Line Scripts
 - `./start_recording.py` - Start recording daemon for all enabled channels
@@ -187,6 +218,29 @@ See `pyproject.toml` for complete dependency list. Key packages:
 - requests (HTTP client)
 - threading (concurrent processing)
 - numpy (audio analysis)
+
+## Latest Features Summary
+
+### Batch Download & Concatenation
+Select multiple recordings in any channel's modal window and use the "Download Selected" button to:
+- Automatically sort recordings chronologically (oldest to newest)
+- Concatenate into a single FLAC file using FFmpeg
+- Generate descriptive filenames with timestamp ranges
+- Download seamlessly with progress feedback
+
+### Enhanced Modal Interface
+- **Refresh Button**: Update recording lists without closing the modal
+- **Improved Layout**: Better organized controls and visual feedback
+- **Accurate Timestamps**: Fixed timezone display issues (all times in local PDT)
+- **Batch Operations**: Select multiple recordings for playback or download
+
+### Production Ready
+- **Deployment Flexible**: Works correctly regardless of installation directory
+- **Container Compatible**: Ready for Docker deployment
+- **Service Ready**: Compatible with systemd and other process managers
+- **Path Independent**: Uses absolute paths for reliable file operations
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 ## License
 

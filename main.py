@@ -9,8 +9,14 @@ from flask import Flask, render_template, jsonify, request, send_file
 import os
 from audio_recorder import AudioRecorder
 
-# Initialize audio recorder
-audio_recorder = AudioRecorder()
+# Get the directory where this script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Initialize audio recorder with proper paths
+audio_recorder = AudioRecorder(
+    config_file=os.path.join(BASE_DIR, "radio_channels.json"),
+    output_dir=os.path.join(BASE_DIR, "audio_files")
+)
 
 
 def create_app():
@@ -137,7 +143,7 @@ def create_app():
                 channel_id = (
                     "_".join(parts[3:]).replace(".mp3", "").replace(".flac", "")
                 )
-                file_path = os.path.join("audio_files", channel_id, filename)
+                file_path = os.path.join(BASE_DIR, "audio_files", channel_id, filename)
 
                 if os.path.exists(file_path):
                     # Determine MIME type based on file extension
@@ -167,6 +173,122 @@ def create_app():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+    @app.route("/api/recordings/concatenate", methods=["POST"])
+    def concatenate_recordings():
+        """Concatenate multiple recording files into a single file"""
+        try:
+            print("Concatenation request received")
+            data = request.get_json()
+            if data is None:
+                print("No JSON data received")
+                return jsonify({"error": "No JSON data received"}), 400
+                
+            files = data.get("files", [])
+            channel_name = data.get("channel_name", "mixed").replace(" ", "_")
+            
+            print(f"Files to concatenate: {files}")
+            print(f"Channel name: {channel_name}")
+            
+            if not files:
+                return jsonify({"error": "No files specified"}), 400
+            
+            # Import required modules
+            import subprocess
+            import tempfile
+            from datetime import datetime
+            
+            # Create temporary directory for processing
+            with tempfile.TemporaryDirectory() as temp_dir:
+                # Collect full file paths and validate they exist
+                input_files = []
+                for filename in files:
+                    print(f"Processing filename: {filename}")
+                    # Extract channel from filename pattern
+                    parts = filename.split("_")
+                    if len(parts) >= 4:
+                        channel_id = "_".join(parts[3:]).replace(".mp3", "").replace(".flac", "")
+                        file_path = os.path.join(BASE_DIR, "audio_files", channel_id, filename)
+                        print(f"Looking for file: {file_path}")
+                        
+                        if os.path.exists(file_path):
+                            input_files.append(file_path)
+                            print(f"Found file: {file_path}")
+                        else:
+                            print(f"File not found: {file_path}")
+                            return jsonify({"error": f"File not found: {filename}"}), 404
+                    else:
+                        print(f"Invalid filename format: {filename}")
+                        return jsonify({"error": f"Invalid filename format: {filename}"}), 400
+                
+                print(f"Total input files found: {len(input_files)}")
+                if not input_files:
+                    return jsonify({"error": "No valid files found"}), 404
+                
+                # Generate output filename with timestamp
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_filename = f"{timestamp}_{channel_name}_concatenated.flac"
+                output_path = os.path.join(temp_dir, output_filename)
+                
+                # Create ffmpeg command for concatenation
+                # First, create a file list for ffmpeg concat demuxer
+                filelist_path = os.path.join(temp_dir, "filelist.txt")
+                with open(filelist_path, 'w') as f:
+                    for file_path in input_files:
+                        # Use absolute paths for ffmpeg
+                        abs_path = os.path.abspath(file_path)
+                        # Escape single quotes and backslashes for ffmpeg
+                        escaped_path = abs_path.replace("'", "'\"'\"'").replace("\\", "\\\\")
+                        f.write(f"file '{escaped_path}'\n")
+                
+                # Run ffmpeg to concatenate files
+                ffmpeg_command = [
+                    "ffmpeg",
+                    "-f", "concat",
+                    "-safe", "0",
+                    "-i", filelist_path,
+                    "-c", "copy",  # Copy streams without re-encoding for speed
+                    "-y",  # Overwrite output file
+                    output_path
+                ]
+                
+                print(f"Running ffmpeg command: {' '.join(ffmpeg_command)}")
+                result = subprocess.run(
+                    ffmpeg_command,
+                    capture_output=True,
+                    text=True,
+                    timeout=300  # 5-minute timeout
+                )
+                
+                if result.returncode != 0:
+                    print(f"FFmpeg error: {result.stderr}")
+                    return jsonify({"error": f"FFmpeg failed: {result.stderr}"}), 500
+                
+                # Check if output file was created
+                if not os.path.exists(output_path):
+                    return jsonify({"error": "Concatenation failed - output file not created"}), 500
+                
+                # Read the file into memory before the temp directory is cleaned up
+                with open(output_path, 'rb') as f:
+                    file_data = f.read()
+                
+                # Create a response with the file data
+                from flask import Response
+                response = Response(
+                    file_data,
+                    mimetype="audio/flac",
+                    headers={
+                        "Content-Disposition": f"attachment; filename={output_filename}",
+                        "Content-Length": str(len(file_data))
+                    }
+                )
+                return response
+                
+        except subprocess.TimeoutExpired:
+            return jsonify({"error": "Concatenation timed out"}), 504
+        except Exception as e:
+            print(f"Concatenation error: {str(e)}")
+            return jsonify({"error": f"Concatenation failed: {str(e)}"}), 500
+
     @app.route("/api/stats")
     def get_statistics():
         """Get recording statistics"""
@@ -180,7 +302,7 @@ def create_app():
             today = date.today().strftime("%Y%m%d")
 
             for channel_id in audio_recorder.channels:
-                channel_dir = os.path.join("audio_files", channel_id)
+                channel_dir = os.path.join(BASE_DIR, "audio_files", channel_id)
                 channel_count = 0
                 channel_size = 0
                 channel_today = 0
@@ -252,8 +374,10 @@ def create_app():
             from datetime import datetime, timedelta
 
             # Count temp files by age (both mp3 and flac)
-            temp_pattern_mp3 = os.path.join("audio_files", "*", "temp_*.mp3")
-            temp_pattern_flac = os.path.join("audio_files", "*", "temp_*.flac")
+            import glob
+            
+            temp_pattern_mp3 = os.path.join(BASE_DIR, "audio_files", "*", "temp_*.mp3")
+            temp_pattern_flac = os.path.join(BASE_DIR, "audio_files", "*", "temp_*.flac")
             temp_files = glob.glob(temp_pattern_mp3) + glob.glob(temp_pattern_flac)
 
             now = datetime.now()
