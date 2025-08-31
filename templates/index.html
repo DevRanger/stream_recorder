@@ -441,6 +441,31 @@
       padding-bottom: 8px;
     }
 
+    .modal-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .refresh-btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+      background: #2980b9;
+    }
+
+    .refresh-btn:active {
+      background: #21618c;
+    }
+
     .close {
       color: #bdc3c7;
       font-size: 28px;
@@ -696,8 +721,15 @@
     <!-- Channel Recordings Modal -->
     <div id="channelModal" class="modal" style="display: none">
       <div class="modal-content">
-        <span class="close" onclick="closeChannelModal()">&times;</span>
-        <h2 id="modalChannelName">Channel Recordings</h2>
+        <div class="modal-header">
+          <h2 id="modalChannelName">Channel Recordings</h2>
+          <div class="modal-controls">
+            <button onclick="refreshChannelRecordings()" class="refresh-btn" title="Refresh recordings list">
+              ↻ Refresh
+            </button>
+            <span class="close" onclick="closeChannelModal()">&times;</span>
+          </div>
+        </div>
 
         <!-- Date Filter Controls -->
         <div class="date-filters">
@@ -1329,6 +1361,157 @@
 
     function closeChannelModal() {
       document.getElementById("channelModal").style.display = "none";
+    }
+
+    function refreshChannelRecordings() {
+      if (currentChannelId && currentChannelName) {
+        console.log(`Refreshing recordings for channel: ${currentChannelId}`);
+        
+        // Show loading indicator
+        const container = document.getElementById("modalRecordingsContainer");
+        container.innerHTML = '<div class="loading">Refreshing recordings...</div>';
+        
+        // Use the same logic as openChannelModal but without changing the modal display
+        const refreshModal = async () => {
+          try {
+            const startDate = document.getElementById("startDate").value;
+            const endDate = document.getElementById("endDate").value;
+            const startTime = document.getElementById("startTime").value;
+            const endTime = document.getElementById("endTime").value;
+
+            let url = `/api/recordings/channel/${currentChannelId}?limit=200`;
+            if (startDate) {
+              const startDateTime = startTime ? `${startDate}T${startTime}` : startDate;
+              url += `&start_date=${startDateTime}`;
+            }
+            if (endDate) {
+              const endDateTime = endTime ? `${endDate}T${endTime}` : endDate;
+              url += `&end_date=${endDateTime}`;
+            }
+
+            console.log(`Refreshing recordings from: ${url}`);
+            const response = await fetch(url);
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log(`Refreshed data:`, data);
+
+            container.innerHTML = "";
+
+            if (data.recordings && data.recordings.length > 0) {
+              console.log(`Processing ${data.recordings.length} recordings`);
+              const list = document.createElement("div");
+              list.className = "recording-list";
+
+              data.recordings.forEach((recording, index) => {
+                console.log(`Processing recording ${index}:`, recording);
+                const item = document.createElement("div");
+                item.className = "recording-item";
+
+                // Simple fallback formatting
+                let formattedTime = recording.timestamp || 'Unknown time';
+                try {
+                  formattedTime = formatDateTimeForLA(recording.timestamp);
+                } catch (e) {
+                  console.warn(`Date formatting failed for ${recording.timestamp}:`, e);
+                }
+
+                const duration = recording.duration_ms
+                  ? `${(recording.duration_ms / 1000).toFixed(1)}s`
+                  : recording.duration ? `${recording.duration}s` : "Unknown";
+
+                item.innerHTML = `
+                        <input type="checkbox" class="recording-checkbox" 
+                               data-filename="${recording.filename}"
+                               data-timestamp="${recording.timestamp}" 
+                               onchange="updateBatchControls()">
+                        <div class="recording-info">
+                            <div class="recording-name">${recording.filename}</div>
+                            <div class="recording-meta">
+                                ${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}
+                            </div>
+                        </div>
+                        <div class="recording-actions">
+                            <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${currentChannelName}')">
+                                Play
+                            </button>
+                            <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">
+                                Download
+                            </button>
+                        </div>
+                    `;
+
+                list.appendChild(item);
+              });
+
+              container.appendChild(list);
+
+              // Add pagination info if needed
+              if (data.has_more) {
+                const info = document.createElement("div");
+                info.className = "pagination";
+                info.innerHTML = `<p>Showing ${data.recordings.length} of ${data.total} recordings</p>`;
+                container.appendChild(info);
+              }
+
+              // Update batch controls
+              updateBatchControls();
+            } else if (data.length > 0) {
+              // Handle case where data is directly an array
+              const list = document.createElement("div");
+              list.className = "recording-list";
+
+              data.forEach((recording) => {
+                const item = document.createElement("div");
+                item.className = "recording-item";
+
+                const formattedTime = formatDateTimeForLA(recording.timestamp);
+                const duration = recording.duration_ms
+                  ? `${(recording.duration_ms / 1000).toFixed(1)}s`
+                  : recording.duration ? `${recording.duration}s` : "Unknown";
+
+                item.innerHTML = `
+                        <input type="checkbox" class="recording-checkbox" 
+                               data-filename="${recording.filename}"
+                               data-timestamp="${recording.timestamp}" 
+                               onchange="updateBatchControls()">
+                        <div class="recording-info">
+                            <div class="recording-name">${recording.filename}</div>
+                            <div class="recording-meta">
+                                ${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}
+                            </div>
+                        </div>
+                        <div class="recording-actions">
+                            <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${currentChannelName}')">
+                                Play
+                            </button>
+                            <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">
+                                Download
+                            </button>
+                        </div>
+                    `;
+
+                list.appendChild(item);
+              });
+
+              container.appendChild(list);
+              updateBatchControls();
+            } else {
+              container.innerHTML = '<div class="no-recordings">No recordings found for the selected date range.</div>';
+            }
+          } catch (error) {
+            console.error('Error refreshing recordings:', error);
+            container.innerHTML = `<div class="error">Error refreshing recordings: ${error.message}</div>`;
+          }
+        };
+
+        refreshModal();
+      } else {
+        console.warn('No channel selected for refresh');
+      }
     }
 
     function filterRecordings() {
