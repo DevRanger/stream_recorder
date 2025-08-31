@@ -135,45 +135,51 @@ def create_app():
     def download_recording(filename):
         """Download a specific recording file with proper headers for audio streaming"""
         try:
-            # Extract channel from filename pattern: YYYYMMDD_HHMMSS_MS_CHANNEL.ext
-            parts = filename.split("_")
-            if len(parts) >= 4:
-                # Channel name starts from the 4th part (index 3)
-                # Remove both .mp3 and .flac extensions
-                channel_id = (
-                    "_".join(parts[3:]).replace(".mp3", "").replace(".flac", "")
+            # Check if this is a concatenated file (stored directly in audio_files)
+            if filename.startswith("concatenated_"):
+                file_path = os.path.join(BASE_DIR, "audio_files", filename)
+            else:
+                # Extract channel from filename pattern: YYYYMMDD_HHMMSS_MS_CHANNEL.ext
+                parts = filename.split("_")
+                if len(parts) >= 4:
+                    # Channel name starts from the 4th part (index 3)
+                    # Remove both .mp3 and .flac extensions
+                    channel_id = (
+                        "_".join(parts[3:]).replace(".mp3", "").replace(".flac", "")
+                    )
+                    file_path = os.path.join(BASE_DIR, "audio_files", channel_id, filename)
+                else:
+                    return jsonify({"error": "Invalid filename format"}), 400
+
+            if os.path.exists(file_path):
+                # Determine MIME type based on file extension
+                if filename.lower().endswith(".flac"):
+                    mimetype = "audio/flac"
+                elif filename.lower().endswith(".mp3"):
+                    mimetype = "audio/mpeg"
+                else:
+                    mimetype = "audio/mpeg"  # Default fallback
+
+                # Add headers for better audio streaming support
+                response = send_file(
+                    file_path,
+                    mimetype=mimetype,
+                    as_attachment=False,
+                    download_name=filename,
                 )
-                file_path = os.path.join(BASE_DIR, "audio_files", channel_id, filename)
-
-                if os.path.exists(file_path):
-                    # Determine MIME type based on file extension
-                    if filename.lower().endswith(".flac"):
-                        mimetype = "audio/flac"
-                    elif filename.lower().endswith(".mp3"):
-                        mimetype = "audio/mpeg"
-                    else:
-                        mimetype = "audio/mpeg"  # Default fallback
-
-                    # Add headers for better audio streaming support
-                    response = send_file(
-                        file_path,
-                        mimetype=mimetype,
-                        as_attachment=False,
-                        download_name=filename,
-                    )
-                    response.headers["Accept-Ranges"] = "bytes"
-                    response.headers["Cache-Control"] = "public, max-age=3600"
-                    response.headers["Content-Disposition"] = (
-                        f'inline; filename="{filename}"'
-                    )
-                    return response
+                response.headers["Accept-Ranges"] = "bytes"
+                response.headers["Cache-Control"] = "public, max-age=3600"
+                response.headers["Content-Disposition"] = (
+                    f'inline; filename="{filename}"'
+                )
+                return response
 
             return jsonify({"error": "File not found"}), 404
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    @app.route("/api/recordings/concatenate", methods=["POST"])
+    @app.route("/api/concatenate", methods=["POST"])
     def concatenate_recordings():
         """Concatenate multiple recording files into a single file"""
         try:
@@ -203,22 +209,29 @@ def create_app():
                 input_files = []
                 for filename in files:
                     print(f"Processing filename: {filename}")
-                    # Extract channel from filename pattern
-                    parts = filename.split("_")
-                    if len(parts) >= 4:
-                        channel_id = "_".join(parts[3:]).replace(".mp3", "").replace(".flac", "")
-                        file_path = os.path.join(BASE_DIR, "audio_files", channel_id, filename)
-                        print(f"Looking for file: {file_path}")
-                        
-                        if os.path.exists(file_path):
-                            input_files.append(file_path)
-                            print(f"Found file: {file_path}")
-                        else:
-                            print(f"File not found: {file_path}")
-                            return jsonify({"error": f"File not found: {filename}"}), 404
+                    
+                    # Check if filename includes directory path (like "25_-_San_Mateo/file.flac")
+                    if "/" in filename:
+                        # Use the path as provided
+                        file_path = os.path.join(BASE_DIR, "audio_files", filename)
                     else:
-                        print(f"Invalid filename format: {filename}")
-                        return jsonify({"error": f"Invalid filename format: {filename}"}), 400
+                        # Extract channel from filename pattern for backwards compatibility
+                        parts = filename.split("_")
+                        if len(parts) >= 4:
+                            channel_id = "_".join(parts[3:]).replace(".mp3", "").replace(".flac", "")
+                            file_path = os.path.join(BASE_DIR, "audio_files", channel_id, filename)
+                        else:
+                            print(f"Invalid filename format: {filename}")
+                            return jsonify({"error": f"Invalid filename format: {filename}"}), 400
+                    
+                    print(f"Looking for file: {file_path}")
+                    
+                    if os.path.exists(file_path):
+                        input_files.append(file_path)
+                        print(f"Found file: {file_path}")
+                    else:
+                        print(f"File not found: {file_path}")
+                        return jsonify({"error": f"File not found: {filename}"}), 404
                 
                 print(f"Total input files found: {len(input_files)}")
                 if not input_files:
@@ -226,32 +239,33 @@ def create_app():
                 
                 # Generate output filename with timestamp
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_filename = f"{timestamp}_{channel_name}_concatenated.flac"
+                output_filename = f"concatenated_{timestamp}.flac"
                 output_path = os.path.join(temp_dir, output_filename)
                 
-                # Create ffmpeg command for concatenation
-                # First, create a file list for ffmpeg concat demuxer
-                filelist_path = os.path.join(temp_dir, "filelist.txt")
-                with open(filelist_path, 'w') as f:
-                    for file_path in input_files:
-                        # Use absolute paths for ffmpeg
-                        abs_path = os.path.abspath(file_path)
-                        # Escape single quotes and backslashes for ffmpeg
-                        escaped_path = abs_path.replace("'", "'\"'\"'").replace("\\", "\\\\")
-                        f.write(f"file '{escaped_path}'\n")
+                # Create ffmpeg command for concatenation using concat filter
+                # This approach is more reliable with FLAC files
                 
-                # Run ffmpeg to concatenate files
-                ffmpeg_command = [
-                    "ffmpeg",
-                    "-f", "concat",
-                    "-safe", "0",
-                    "-i", filelist_path,
-                    "-c", "copy",  # Copy streams without re-encoding for speed
+                ffmpeg_command = ["ffmpeg"]
+                
+                # Add input files
+                for file_path in input_files:
+                    abs_path = os.path.abspath(file_path)
+                    ffmpeg_command.extend(["-i", abs_path])
+                
+                # Build filter complex for concatenation
+                num_files = len(input_files)
+                filter_inputs = ''.join(f'[{i}:0]' for i in range(num_files))
+                filter_complex = f'{filter_inputs}concat=n={num_files}:v=0:a=1[out]'
+                
+                ffmpeg_command.extend([
+                    "-filter_complex", filter_complex,
+                    "-map", "[out]",
                     "-y",  # Overwrite output file
                     output_path
-                ]
+                ])
                 
                 print(f"Running ffmpeg command: {' '.join(ffmpeg_command)}")
+                print(f"Filter complex: {filter_complex}")
                 result = subprocess.run(
                     ffmpeg_command,
                     capture_output=True,
@@ -267,21 +281,23 @@ def create_app():
                 if not os.path.exists(output_path):
                     return jsonify({"error": "Concatenation failed - output file not created"}), 500
                 
-                # Read the file into memory before the temp directory is cleaned up
-                with open(output_path, 'rb') as f:
-                    file_data = f.read()
+                # Move the concatenated file to the audio_files directory
+                final_output_path = os.path.join(BASE_DIR, "audio_files", output_filename)
+                import shutil
+                shutil.move(output_path, final_output_path)
                 
-                # Create a response with the file data
-                from flask import Response
-                response = Response(
-                    file_data,
-                    mimetype="audio/flac",
-                    headers={
-                        "Content-Disposition": f"attachment; filename={output_filename}",
-                        "Content-Length": str(len(file_data))
-                    }
-                )
-                return response
+                print(f"Concatenation successful: {final_output_path}")
+                print(f"Final file size: {os.path.getsize(final_output_path)} bytes")
+                
+                # Return JSON response with download URL
+                download_url = f"/api/recording/{output_filename}"
+                return jsonify({
+                    'success': True,
+                    'download_url': download_url,
+                    'filename': output_filename,
+                    'files_concatenated': len(input_files),
+                    'file_list': [os.path.basename(f) for f in input_files]
+                })
                 
         except subprocess.TimeoutExpired:
             return jsonify({"error": "Concatenation timed out"}), 504

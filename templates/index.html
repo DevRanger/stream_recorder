@@ -1890,7 +1890,7 @@
         const filename = checkbox.getAttribute('data-filename');
         const timestamp = checkbox.getAttribute('data-timestamp');
         
-        console.log('Raw timestamp for', filename, ':', timestamp);
+        console.log(`Processing selected file: ${filename} with timestamp: ${timestamp}`);
 
         // Parse timestamp from YYYYMMDD_HHMMSS format to proper Date
         let parsedDate;
@@ -1926,7 +1926,26 @@
       // Extract sorted filenames
       const sortedFilenames = selectedRecordings.map(recording => recording.filename);
       
-      console.log('Downloading recordings in chronological order:', sortedFilenames);
+      console.log(`Total selected recordings: ${selectedRecordings.length}`);
+      console.log('Selected files with details:', selectedRecordings.map(r => ({
+        filename: r.filename,
+        timestamp: r.timestamp.toISOString(),
+        rawTimestamp: r.rawTimestamp
+      })));
+      console.log('Final sorted filenames for download:', sortedFilenames);
+
+      // Show confirmation dialog with file list
+      const fileListForUser = sortedFilenames.map((f, i) => `${i + 1}. ${f}`).join('\n');
+      const confirmed = confirm(
+        `You're about to download and concatenate ${selectedRecordings.length} recordings.\n\n` +
+        `Files will be combined in chronological order:\n\n${fileListForUser}\n\n` +
+        `Continue with download?`
+      );
+
+      if (!confirmed) {
+        console.log('User cancelled batch download');
+        return;
+      }
 
       // Show loading message
       showMessage(`Preparing concatenated download of ${selectedRecordings.length} recordings...`, 'info');
@@ -1943,7 +1962,7 @@
         channel_name: currentChannelName || 'mixed'
       };
 
-      fetch('/api/recordings/concatenate', {
+      fetch('/api/concatenate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1954,26 +1973,31 @@
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        return response.blob();
+        return response.json();
       })
-      .then(blob => {
-        // Create download link
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
+      .then(data => {
+        console.log('Concatenation response:', data);
         
-        // Generate filename with timestamp range
-        const startTime = selectedRecordings[0].rawTimestamp;
-        const endTime = selectedRecordings[selectedRecordings.length - 1].rawTimestamp;
-        const channelName = (currentChannelName || 'mixed').replace(/[^a-zA-Z0-9-_]/g, '_');
-        
-        a.download = `${startTime}_to_${endTime}_${channelName}_concatenated.flac`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        
-        showMessage(`Downloaded ${selectedRecordings.length} recordings as concatenated file`, 'success');
+        if (data.success) {
+          console.log(`Successfully concatenated ${data.files_concatenated} files:`);
+          console.log('Files included:', data.file_list);
+          
+          // Create download link
+          const a = document.createElement('a');
+          a.href = data.download_url;
+          a.download = data.filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          
+          showMessage(
+            `Successfully concatenated ${data.files_concatenated} recordings into ${data.filename}. ` +
+            `Files included: ${data.file_list.join(', ')}`, 
+            'success'
+          );
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
       })
       .catch(error => {
         console.error('Error downloading concatenated recordings:', error);
