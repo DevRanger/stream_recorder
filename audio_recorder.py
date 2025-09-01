@@ -40,10 +40,11 @@ class AudioRecorder:
         self.recording_threads = {}
 
         # Simple audio processing settings
-        self.chunk_duration = 30  # seconds - buffer size for processing
+        self.chunk_duration = 45  # seconds - buffer size for processing
         self.min_transmission_length = 500  # ms (minimum 0.5 seconds)
         self.max_transmission_length = 45000  # ms (maximum 45 seconds)
         self.silence_gap = 4000  # ms between transmissions (4 seconds of silence before stopping)
+        self.audio_padding = 400  # ms - extra padding at end of transmissions to capture fade-outs
 
         self.load_channels()
         self.ensure_output_directory()
@@ -137,11 +138,19 @@ class AudioRecorder:
                         current_segment_start = start_ms
                 else:
                     if current_segment_start is not None:
-                        # End of current segment
-                        segments.append((current_segment_start, start_ms))
+                        # End of current segment - add padding to capture fade-outs
+                        original_end = start_ms
+                        padded_end = min(start_ms + self.audio_padding, duration_ms)
+                        segments.append((current_segment_start, padded_end))
+                        
+                        # Log padding application
+                        padding_applied = padded_end - original_end
+                        if padding_applied > 0:
+                            logger.debug(f"Applied {padding_applied}ms padding to segment ending at {original_end}ms")
+                        
                         current_segment_start = None
             
-            # Handle segment that goes to the end
+            # Handle segment that goes to the end - already at end, no padding needed
             if current_segment_start is not None:
                 segments.append((current_segment_start, duration_ms))
             
@@ -254,6 +263,7 @@ class AudioRecorder:
             
             logger.info(f"Audio levels: max_dBFS={max_db:.1f}, RMS={rms_level:.4f}")
             logger.info(f"Volume sensitivity threshold: {volume_sensitivity}")
+            logger.info(f"Audio padding enabled: {self.audio_padding}ms")
             
             # Find audio segments
             audio_segments = self.find_audio_segments(audio_segment, volume_sensitivity)
