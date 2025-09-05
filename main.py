@@ -30,6 +30,10 @@ def create_app():
     def index():
         return render_template("index.html")
 
+    @app.route("/robots.txt")
+    def robots_txt():
+        return send_file("static/robots.txt", mimetype='text/plain')
+
     @app.route("/test")
     def test():
         return send_file("test_page.html")
