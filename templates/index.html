@@ -684,7 +684,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>🚔 Radio Audio Logger</h1>
+      <h1>🚔 Radio Audio Logger 🚒</h1>
       <p class="subtitle">
         Experimental recording of emergency services
         communications
@@ -777,16 +777,16 @@
   </div>
 
   <script>
-    console.log("Script tag loaded successfully");
+    //console.log("Script tag loaded successfully");
 
     // Immediately try to call the API to test
     fetch("/api/channels")
       .then(response => {
-        console.log("API Response:", response);
+        //console.log("API Response:", response);
         return response.json();
       })
       .then(data => {
-        console.log("API Data:", data);
+        //console.log("API Data:", data);
       })
       .catch(error => {
         console.error("API Error:", error);
@@ -801,15 +801,17 @@
     const LA_TIMEZONE = "America/Los_Angeles";
 
     async function loadChannels() {
-      console.log("Loading channels...");
+      //console.log("Loading channels...");
       try {
-        const [channelsResponse, statusResponse] = await Promise.all([
+        const [channelsResponse, statusResponse, minutesResponse] = await Promise.all([
           fetch("/api/channels"),
           fetch("/api/status"),
+          fetch("/api/channel-minutes"),
         ]);
 
         const channels = await channelsResponse.json();
         const status = await statusResponse.json();
+        const channelMinutes = await minutesResponse.json();
         console.log("Channels loaded:", Object.keys(channels).length);
 
         const container = document.getElementById("channelsContainer");
@@ -829,9 +831,9 @@
         table.innerHTML = `
             <thead>
               <tr>
-                <th>Status</th>
-                <th>Channel</th>
                 <th>Group</th>
+                <th>Channel</th>
+                <th>Minutes for 7 days</th>
               </tr>
             </thead>
             <tbody id="channelsTableBody">
@@ -842,51 +844,20 @@
 
         // Create rows for each channel
         Object.entries(channels).forEach(([channelId, channel]) => {
-          const isRecording = status[channelId]?.recording || false;
-          const health = status[channelId]?.health || "unknown";
-          const failures = status[channelId]?.consecutive_failures || 0;
-
-          // Determine status display
-          let statusClass, statusText;
-          if (isRecording) {
-            statusClass = "status-recording";
-            statusText = "Recording";
-          } else {
-            switch (health) {
-              case "healthy":
-                statusClass = "status-healthy";
-                statusText = "Healthy";
-                break;
-              case "warning":
-                statusClass = "status-warning";
-                statusText = `Warning (${failures} failures)`;
-                break;
-              case "degraded":
-                statusClass = "status-degraded";
-                statusText = `Degraded (${failures} failures)`;
-                break;
-              case "failed":
-                statusClass = "status-failed";
-                statusText = `Failed (${failures} failures)`;
-                break;
-              default:
-                statusClass = "status-idle";
-                statusText = "Idle";
-            }
-          }
-
+          const minutes = channelMinutes[channelId] || 0;
+          // Format minutes: show "0.0" for zero, "0.X" for values 0 < value < 1, normal for >= 1
+          const formattedMinutes = minutes < 1 ? 
+            minutes.toFixed(1).padStart(3, '0') : 
+            minutes.toFixed(1);
           const row = document.createElement("tr");
           row.innerHTML = `
-              <td>
-                <span class="status-indicator ${statusClass}"></span>
-                ${statusText}
-              </td>
+              <td>${channel.group || "Unknown"}</td>
               <td>
                 <div class="channel-name" data-channel-id="${channelId}" data-channel-name="${channel.name.replace(/"/g, '&quot;')}">
                   ${channel.name}
                 </div>
               </td>
-              <td>${channel.group || "Unknown"}</td>
+              <td>${formattedMinutes}</td>
             `;
 
           tbody.appendChild(row);
@@ -896,16 +867,16 @@
 
         // Add click event listeners to channel names
         const channelElements = document.querySelectorAll('.channel-name');
-        console.log(`Adding click listeners to ${channelElements.length} channel elements`);
-        console.log('First few channel elements:', channelElements);
+        //console.log(`Adding click listeners to ${channelElements.length} channel elements`);
+        //console.log('First few channel elements:', channelElements);
 
         channelElements.forEach((element, index) => {
-          console.log(`Adding listener to element ${index}:`, element);
+          //console.log(`Adding listener to element ${index}:`, element);
           element.addEventListener('click', function (event) {
-            console.log('Click event triggered!', event);
+            //console.log('Click event triggered!', event);
             const channelId = this.getAttribute('data-channel-id');
             const channelName = this.getAttribute('data-channel-name');
-            console.log(`Channel clicked: ${channelId} - ${channelName}`);
+            //console.log(`Channel clicked: ${channelId} - ${channelName}`);
 
             try {
               openChannelModal(channelId, channelName);
@@ -919,21 +890,8 @@
           element.style.cursor = 'pointer';
         });
 
-        console.log("Table created and added to container");
+        //console.log("Table created and added to container");
 
-        // Additional debugging - let's see what's actually in the DOM
-        setTimeout(() => {
-          const allChannelNames = document.querySelectorAll('.channel-name');
-          console.log('Channel names found after timeout:', allChannelNames.length);
-          if (allChannelNames.length > 0) {
-            console.log('First channel element:', allChannelNames[0]);
-            console.log('First channel data:', {
-              id: allChannelNames[0].getAttribute('data-channel-id'),
-              name: allChannelNames[0].getAttribute('data-channel-name'),
-              text: allChannelNames[0].textContent
-            });
-          }
-        }, 1000);
       } catch (error) {
         console.error("Error loading channels:", error);
         document.getElementById("channelsContainer").innerHTML =
@@ -942,12 +900,12 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      console.log("DOM loaded - starting initialization");
+      //console.log("DOM loaded - starting initialization");
 
       // Load channels and update status
       Promise.all([loadChannels(), updateStatus()])
         .then(() => {
-          console.log("Initial load completed");
+          //console.log("Initial load completed");
           // Set up auto-refresh every 5 seconds
           setInterval(() => {
             updateStatus();
@@ -967,7 +925,7 @@
           (s) => s.recording
         ).length;
 
-        console.log(`Status update: ${recordingChannels} recording channels`);
+        //console.log(`Status update: ${recordingChannels} recording channels`);
 
         // Update system status
         const systemStatus = document.getElementById("systemStatus");
@@ -983,7 +941,7 @@
 
         // Update active channels count
         const activeChannelsElement = document.getElementById("activeChannels");
-        console.log(`Updating activeChannels element with: ${recordingChannels}`);
+        //console.log(`Updating activeChannels element with: ${recordingChannels}`);
         if (activeChannelsElement) {
           activeChannelsElement.textContent = recordingChannels;
         } else {
@@ -992,6 +950,9 @@
 
         // Update total recordings count for today
         updateTodaysRecordingCount();
+        
+        // Update channel minutes
+        updateChannelMinutes();
       } catch (error) {
         console.error("Error updating status:", error);
         const systemStatus = document.getElementById("systemStatus");
@@ -1021,6 +982,36 @@
       } catch (error) {
         console.error("Error fetching stats:", error);
         document.getElementById("totalRecordings").textContent = "N/A";
+      }
+    }
+
+    async function updateChannelMinutes() {
+      try {
+        const response = await fetch("/api/channel-minutes");
+        const channelMinutes = await response.json();
+        
+        // Update each channel's minutes in the table
+        const table = document.querySelector('.channels-table');
+        if (table) {
+          const rows = table.querySelectorAll('tbody tr');
+          rows.forEach(row => {
+            const channelNameDiv = row.querySelector('.channel-name');
+            if (channelNameDiv) {
+              const channelId = channelNameDiv.getAttribute('data-channel-id');
+              const minutesCell = row.cells[2]; // Third column (Minutes for 7 days)
+              if (minutesCell && channelId) {
+                const minutes = channelMinutes[channelId] || 0;
+                // Format minutes: show "0.0" for zero, "0.X" for values 0 < value < 1, normal for >= 1
+                const formattedMinutes = minutes < 1 ? 
+                  minutes.toFixed(1).padStart(3, '0') : 
+                  minutes.toFixed(1);
+                minutesCell.textContent = formattedMinutes;
+              }
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error updating channel minutes:", error);
       }
     }
 
@@ -1092,7 +1083,7 @@
     }
 
     function showMessage(message, type = "info") {
-      console.log(`${type.toUpperCase()}: ${message}`);
+      //console.log(`${type.toUpperCase()}: ${message}`);
       // Simple fallback - show as alert for errors, log others
       if (type === "error") {
         alert(`Error: ${message}`);
@@ -1178,7 +1169,7 @@
     }
 
     async function openChannelModal(channelId, channelName) {
-      console.log(`Opening channel modal for: ${channelId}, ${channelName}`);
+      //console.log(`Opening channel modal for: ${channelId}, ${channelName}`);
 
       // Store current channel info for filtering
       currentChannelId = channelId;
@@ -1216,7 +1207,7 @@
           url += `&end_date=${endDateTime}`;
         }
 
-        console.log(`Fetching recordings from: ${url}`);
+        //console.log(`Fetching recordings from: ${url}`);
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -1224,21 +1215,21 @@
         }
 
         const data = await response.json();
-        console.log(`Received data:`, data);
-        console.log(`Recordings array length: ${data.recordings ? data.recordings.length : 'undefined'}`);
+        //console.log(`Received data:`, data);
+        //console.log(`Recordings array length: ${data.recordings ? data.recordings.length : 'undefined'}`);
 
         container.innerHTML = "";
 
         // Handle both array response and object with recordings property
         const recordings = Array.isArray(data) ? data : data.recordings || [];
-        console.log(`Processing ${recordings.length} recordings`);
+        //console.log(`Processing ${recordings.length} recordings`);
 
         if (recordings.length > 0) {
           const list = document.createElement("div");
           list.className = "recording-list";
 
           recordings.forEach((recording, index) => {
-            console.log(`Processing recording ${index}:`, recording);
+            //console.log(`Processing recording ${index}:`, recording);
             const item = document.createElement("div");
             item.className = "recording-item";
 
@@ -1296,7 +1287,7 @@
           // Update batch controls
           updateBatchControls();
         } else {
-          console.log('No recordings found. Data structure:', data);
+          //console.log('No recordings found. Data structure:', data);
           container.innerHTML = `
             <p>No recordings found for this channel in the selected date range</p>
             <p style="font-size: 0.8em; color: #888;">
@@ -1325,7 +1316,7 @@
 
     function refreshChannelRecordings() {
       if (currentChannelId && currentChannelName) {
-        console.log(`Refreshing recordings for channel: ${currentChannelId}`);
+        //console.log(`Refreshing recordings for channel: ${currentChannelId}`);
         
         // Show loading indicator
         const container = document.getElementById("modalRecordingsContainer");
@@ -1349,7 +1340,7 @@
               url += `&end_date=${endDateTime}`;
             }
 
-            console.log(`Refreshing recordings from: ${url}`);
+            //console.log(`Refreshing recordings from: ${url}`);
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -1357,20 +1348,20 @@
             }
 
             const data = await response.json();
-            console.log(`Refreshed data:`, data);
+            //console.log(`Refreshed data:`, data);
 
             container.innerHTML = "";
 
             // Handle both array response and object with recordings property
             const recordings = Array.isArray(data) ? data : data.recordings || [];
-            console.log(`Processing ${recordings.length} recordings`);
+            //console.log(`Processing ${recordings.length} recordings`);
 
             if (recordings.length > 0) {
               const list = document.createElement("div");
               list.className = "recording-list";
 
               recordings.forEach((recording, index) => {
-                console.log(`Processing recording ${index}:`, recording);
+                //console.log(`Processing recording ${index}:`, recording);
                 const item = document.createElement("div");
                 item.className = "recording-item";
 
@@ -1443,7 +1434,7 @@
         return;
       }
 
-      console.log(`Filtering recordings for channel: ${currentChannelId}`);
+      //console.log(`Filtering recordings for channel: ${currentChannelId}`);
       
       // Show loading indicator
       const container = document.getElementById("modalRecordingsContainer");
@@ -1455,7 +1446,7 @@
       const startTime = document.getElementById("startTime").value;
       const endTime = document.getElementById("endTime").value;
 
-      console.log('Filter inputs:', { startDate, endDate, startTime, endTime });
+      //console.log('Filter inputs:', { startDate, endDate, startTime, endTime });
 
       // Build URL with date/time filters
       let url = `/api/recordings/channel/${currentChannelId}?limit=200`;
@@ -1470,7 +1461,7 @@
         url += `&end_date=${endDateTime}`;
       }
 
-      console.log(`Filtering recordings with URL: ${url}`);
+      //console.log(`Filtering recordings with URL: ${url}`);
 
       // Fetch filtered recordings
       fetch(url)
@@ -1481,7 +1472,7 @@
           return response.json();
         })
         .then(data => {
-          console.log(`Filter returned ${Array.isArray(data) ? data.length : data.recordings?.length || 0} recordings`);
+          //console.log(`Filter returned ${Array.isArray(data) ? data.length : data.recordings?.length || 0} recordings`);
           
           // Handle both array response and object with recordings property
           const recordings = Array.isArray(data) ? data : data.recordings || [];
@@ -1489,12 +1480,12 @@
           container.innerHTML = "";
           
           if (recordings.length > 0) {
-            console.log(`Processing ${recordings.length} recordings`);
+            //console.log(`Processing ${recordings.length} recordings`);
             const list = document.createElement("div");
             list.className = "recording-list";
 
             recordings.forEach((recording, index) => {
-              console.log(`Processing recording ${index}:`, recording);
+              //console.log(`Processing recording ${index}:`, recording);
               const item = document.createElement("div");
               item.className = "recording-item";
 
@@ -1761,7 +1752,7 @@
         const filename = checkbox.getAttribute('data-filename');
         const timestamp = checkbox.getAttribute('data-timestamp');
 
-        console.log('Raw timestamp for', filename, ':', timestamp);
+        //console.log('Raw timestamp for', filename, ':', timestamp);
 
         // Parse timestamp from YYYYMMDD_HHMMSS format to proper Date
         let parsedDate;
@@ -1794,7 +1785,7 @@
       // Sort recordings by timestamp (oldest to newest)
       selectedRecordings.sort((a, b) => {
         const result = a.timestamp - b.timestamp;
-        console.log('Comparing:', a.filename, '(', a.timestamp, ') vs', b.filename, '(', b.timestamp, ') result:', result);
+        //console.log('Comparing:', a.filename, '(', a.timestamp, ') vs', b.filename, '(', b.timestamp, ') result:', result);
         return result;
       });
 
@@ -1802,8 +1793,8 @@
       batchPlaybackQueue = selectedRecordings.map(recording => recording.filename);
       currentPlaybackIndex = 0;
 
-      console.log('Selected recordings with timestamps:', selectedRecordings);
-      console.log('Playing recordings in chronological order:', batchPlaybackQueue);
+      //console.log('Selected recordings with timestamps:', selectedRecordings);
+      //console.log('Playing recordings in chronological order:', batchPlaybackQueue);
 
       // Start playing the first recording
       playBatchRecording();
@@ -1923,7 +1914,7 @@
         const filename = checkbox.getAttribute('data-filename');
         const timestamp = checkbox.getAttribute('data-timestamp');
         
-        console.log(`Processing selected file: ${filename} with timestamp: ${timestamp}`);
+        //console.log(`Processing selected file: ${filename} with timestamp: ${timestamp}`);
 
         // Parse timestamp from YYYYMMDD_HHMMSS format to proper Date
         let parsedDate;
@@ -1959,13 +1950,13 @@
       // Extract sorted filenames
       const sortedFilenames = selectedRecordings.map(recording => recording.filename);
       
-      console.log(`Total selected recordings: ${selectedRecordings.length}`);
-      console.log('Selected files with details:', selectedRecordings.map(r => ({
-        filename: r.filename,
-        timestamp: r.timestamp.toISOString(),
-        rawTimestamp: r.rawTimestamp
-      })));
-      console.log('Final sorted filenames for download:', sortedFilenames);
+      //console.log(`Total selected recordings: ${selectedRecordings.length}`);
+      //console.log('Selected files with details:', selectedRecordings.map(r => ({
+      //  filename: r.filename,
+      //  timestamp: r.timestamp.toISOString(),
+      //  rawTimestamp: r.rawTimestamp
+      //})));
+      //console.log('Final sorted filenames for download:', sortedFilenames);
 
       // Show confirmation dialog with file list
       const fileListForUser = sortedFilenames.map((f, i) => `${i + 1}. ${f}`).join('\n');
@@ -1976,7 +1967,7 @@
       );
 
       if (!confirmed) {
-        console.log('User cancelled batch download');
+        //console.log('User cancelled batch download');
         return;
       }
 
@@ -2009,11 +2000,11 @@
         return response.json();
       })
       .then(data => {
-        console.log('Concatenation response:', data);
+        //console.log('Concatenation response:', data);
         
         if (data.success) {
-          console.log(`Successfully concatenated ${data.files_concatenated} files:`);
-          console.log('Files included:', data.file_list);
+          //console.log(`Successfully concatenated ${data.files_concatenated} files:`);
+          //console.log('Files included:', data.file_list);
           
           // Create download link
           const a = document.createElement('a');

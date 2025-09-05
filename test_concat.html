@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Concatenation API</title>
+</head>
+
+<body>
+    <h1>Test Concatenation API</h1>
+    <button onclick="testConcatenation()">Test Concatenation</button>
+    <div id="result"></div>
+
+    <script>
+        async function testConcatenation() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing concatenation...';
+
+            const testData = {
+                files: [
+                    "20250828_150445_160_2_-_Sheriff.flac",
+                    "20250828_150631_693_2_-_Sheriff.flac"
+                ]
+            };
+
+            try {
+                console.log('Sending request:', testData);
+
+                const response = await fetch('/api/concatenate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Success result:', result);
+                    resultDiv.innerHTML = `
+                    <h3>✅ Success!</h3>
+                    <p><strong>Files concatenated:</strong> ${result.files_concatenated}</p>
+                    <p><strong>Output file:</strong> ${result.filename}</p>
+                    <p><strong>Download URL:</strong> <a href="${result.download_url}" target="_blank">${result.download_url}</a></p>
+                    <p><strong>Files included:</strong> ${result.file_list.join(', ')}</p>
+                `;
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    resultDiv.innerHTML = `
+                    <h3>❌ Error ${response.status}</h3>
+                    <pre>${errorText}</pre>
+                `;
+                }
+            } catch (error) {
+                console.error('Request failed:', error);
+                resultDiv.innerHTML = `
+                <h3>❌ Request Failed</h3>
+                <p>${error.message}</p>
+            `;
+            }
+        }
+    </script>
+</body>
+
+</html>

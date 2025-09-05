@@ -51,8 +51,11 @@ def create_app():
     @app.route("/api/channels")
     def get_channels():
         """Get all available radio channels"""
-        channels = audio_recorder.channels
-        return jsonify(channels)
+        # Only return channels that are enabled in configuration
+        enabled_channels = {
+            cid: meta for cid, meta in audio_recorder.channels.items() if meta.get("enabled", True)
+        }
+        return jsonify(enabled_channels)
 
     @app.route("/api/status")
     def get_recording_status():
@@ -353,6 +356,45 @@ def create_app():
             }
 
             return jsonify(stats)
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    @app.route("/api/channel-minutes")
+    def get_channel_minutes():
+        """Get total recording minutes for each channel from metadata files"""
+        try:
+            import json
+            
+            minutes_data = {}
+            
+            # Only process enabled channels
+            enabled_channels = {
+                cid: meta for cid, meta in audio_recorder.channels.items() if meta.get("enabled", True)
+            }
+            
+            for channel_id in enabled_channels:
+                channel_dir = os.path.join(BASE_DIR, "audio_files", channel_id)
+                total_ms = 0
+                
+                if os.path.exists(channel_dir):
+                    for filename in os.listdir(channel_dir):
+                        if filename.endswith("_metadata.json"):
+                            metadata_path = os.path.join(channel_dir, filename)
+                            try:
+                                with open(metadata_path, 'r') as f:
+                                    metadata = json.load(f)
+                                    duration_ms = metadata.get('duration_ms', 0)
+                                    total_ms += duration_ms
+                            except (json.JSONDecodeError, FileNotFoundError):
+                                # Skip invalid or missing metadata files
+                                continue
+                
+                # Convert milliseconds to minutes and round to 1 decimal place
+                total_minutes = round(total_ms / 60000, 1)
+                minutes_data[channel_id] = total_minutes
+
+            return jsonify(minutes_data)
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
