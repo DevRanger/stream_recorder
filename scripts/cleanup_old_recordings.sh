@@ -22,7 +22,7 @@ log_message() {
 
 # Function to count files before cleanup
 count_files() {
-    find "$AUDIO_DIR" -type f -name "*.mp3" -o -name "*.json" | wc -l
+    find "$AUDIO_DIR" -type f -name "*.flac" -o -name "*.json" | wc -l
 }
 
 # Start cleanup process
@@ -38,16 +38,16 @@ fi
 BEFORE_COUNT=$(count_files)
 log_message "Total audio files before cleanup: $BEFORE_COUNT"
 
-# Find and remove audio files (.mp3) older than 7 days
-REMOVED_MP3=$(find "$AUDIO_DIR" -type f -name "*.mp3" -mtime +$DAYS_OLD -print)
-if [ -n "$REMOVED_MP3" ]; then
-    echo "$REMOVED_MP3" | while read -r file; do
+# Find and remove audio files (.flac) older than 7 days
+REMOVED_FLAC=$(find "$AUDIO_DIR" -type f -name "*.flac" -mtime +$DAYS_OLD -print)
+if [ -n "$REMOVED_FLAC" ]; then
+    echo "$REMOVED_FLAC" | while read -r file; do
         log_message "Removing audio file: $file"
         rm -f "$file"
     done
-    MP3_COUNT=$(echo "$REMOVED_MP3" | wc -l)
+    FLAC_COUNT=$(echo "$REMOVED_FLAC" | wc -l)
 else
-    MP3_COUNT=0
+    FLAC_COUNT=0
 fi
 
 # Find and remove metadata files (.json) older than 7 days
@@ -70,7 +70,7 @@ AFTER_COUNT=$(count_files)
 TOTAL_REMOVED=$((BEFORE_COUNT - AFTER_COUNT))
 
 # Log summary
-log_message "Cleanup completed: Removed $MP3_COUNT audio files and $JSON_COUNT metadata files"
+log_message "Cleanup completed: Removed $FLAC_COUNT audio files and $JSON_COUNT metadata files"
 log_message "Total files removed: $TOTAL_REMOVED (Before: $BEFORE_COUNT, After: $AFTER_COUNT)"
 log_message "Cleanup process finished"
 echo ""
