@@ -162,7 +162,7 @@ Edit `radio_channels.json` to add/modify channels:
       "group": "Category",
       "volume_sensitivity": 0.01,
       "username": "",
-      "password: ""
+      "password": ""
     }
   ]
 }
