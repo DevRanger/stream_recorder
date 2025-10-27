@@ -65,12 +65,15 @@ class AudioRecorder:
                 channel_name = channel.get("name", "")
                 channel_id = self.sanitize_name(channel_name)
                 if channel_id and channel.get("url"):
+                    # store auth creds if present
                     self.channels[channel_id] = {
                         "name": channel_name,
                         "url": channel.get("url"),
                         "group": channel.get("group", "Unknown"),
                         "enabled": channel.get("enabled", True),
                         "volume_sensitivity": channel.get("volume_sensitivity", 0.01),
+                        "username": channel.get("username"),
+                        "password": channel.get("password"),
                     }
 
             logger.info(f"Loaded {len(self.channels)} channels from configuration")
@@ -84,17 +87,17 @@ class AudioRecorder:
         try:
             # Convert to numpy array
             samples = np.array(audio_segment.get_array_of_samples(), dtype=np.float32)
-            
+
             # Normalize to [-1, 1] range
             if audio_segment.sample_width == 2:  # 16-bit
                 samples = samples / 32768.0
             elif audio_segment.sample_width == 4:  # 32-bit
                 samples = samples / 2147483648.0
-            
+
             # Calculate RMS
             rms = np.sqrt(np.mean(samples ** 2))
             return rms
-            
+
         except Exception as e:
             logger.error(f"Error calculating RMS level: {e}")
             return 0.0
@@ -103,16 +106,16 @@ class AudioRecorder:
         """Simple audio activity detection based on RMS level"""
         try:
             rms_level = self.calculate_rms_level(audio_segment)
-            
+
             # Check if RMS level exceeds sensitivity threshold
             has_audio = rms_level > volume_sensitivity
-            
+
             if has_audio:
                 logger.debug(f"Audio detected: RMS={rms_level:.4f}, threshold={volume_sensitivity}")
                 return True, f"Audio level detected (RMS: {rms_level:.4f})"
             else:
                 return False, f"Audio too quiet (RMS: {rms_level:.4f}, threshold: {volume_sensitivity})"
-                
+
         except Exception as e:
             logger.error(f"Error in audio activity detection: {e}")
             return False, "Detection error"
@@ -124,15 +127,15 @@ class AudioRecorder:
             chunk_size_ms = 100
             segments = []
             duration_ms = len(audio_segment)
-            
+
             current_segment_start = None
-            
+
             for start_ms in range(0, duration_ms, chunk_size_ms):
                 end_ms = min(start_ms + chunk_size_ms, duration_ms)
                 chunk = audio_segment[start_ms:end_ms]
-                
+
                 has_audio, _ = self.detect_audio_activity(chunk, volume_sensitivity)
-                
+
                 if has_audio:
                     if current_segment_start is None:
                         current_segment_start = start_ms
@@ -142,18 +145,18 @@ class AudioRecorder:
                         original_end = start_ms
                         padded_end = min(start_ms + self.audio_padding, duration_ms)
                         segments.append((current_segment_start, padded_end))
-                        
+
                         # Log padding application
                         padding_applied = padded_end - original_end
                         if padding_applied > 0:
                             logger.debug(f"Applied {padding_applied}ms padding to segment ending at {original_end}ms")
-                        
+
                         current_segment_start = None
-            
-            # Handle segment that goes to the end - already at end, no padding needed
+
+            # Handle segment that goes to the end
             if current_segment_start is not None:
                 segments.append((current_segment_start, duration_ms))
-            
+
             # Merge segments that are close together (within silence_gap)
             merged_segments = []
             for start_ms, end_ms in segments:
@@ -162,9 +165,9 @@ class AudioRecorder:
                     merged_segments[-1] = (merged_segments[-1][0], end_ms)
                 else:
                     merged_segments.append((start_ms, end_ms))
-            
+
             return merged_segments
-            
+
         except Exception as e:
             logger.error(f"Error finding audio segments: {e}")
             return []
@@ -199,13 +202,13 @@ class AudioRecorder:
         try:
             channel_dir = os.path.join(self.output_dir, channel_id)
             output_file = os.path.join(channel_dir, f"{timestamp}_{channel_id}.flac")
-            
+
             # Convert milliseconds to seconds for ffmpeg
             start_sec = start_ms / 1000.0
             duration_sec = (end_ms - start_ms) / 1000.0
-            
+
             logger.info(f"Extracting transmission with ffmpeg: {start_ms}-{end_ms}ms ({duration_sec:.2f}s)")
-            
+
             # FFmpeg command to extract segment with FLAC encoding
             cmd = [
                 'ffmpeg', '-y', '-i', source_file,
@@ -214,9 +217,9 @@ class AudioRecorder:
                 '-c:a', 'flac',  # Use FLAC encoding
                 output_file
             ]
-            
+
             result = subprocess.run(cmd, capture_output=True, text=True)
-            
+
             if result.returncode == 0:
                 # Create metadata file
                 metadata = {
@@ -227,19 +230,19 @@ class AudioRecorder:
                     "source_file": os.path.basename(source_file),
                     "extraction_method": "ffmpeg_flac"
                 }
-                
+
                 metadata_file = output_file.replace('.flac', '_metadata.json')
                 with open(metadata_file, 'w') as f:
                     json.dump(metadata, f, indent=2)
-                
+
                 logger.info(f"Successfully extracted transmission: {output_file}")
                 logger.info(f"Created metadata: {metadata_file}")
-                
+
                 return output_file
             else:
                 logger.error(f"ffmpeg extraction failed: {result.stderr}")
                 return None
-                
+
         except Exception as e:
             logger.error(f"Error saving transmission with ffmpeg: {e}")
             return None
@@ -248,42 +251,42 @@ class AudioRecorder:
         """Process audio segment with simple level-based detection"""
         try:
             logger.info(f"Processing complete segment for {channel_id}: {filepath}")
-            
+
             # Load audio file
             audio_segment = AudioSegment.from_file(filepath)
             logger.info(f"File size: {os.path.getsize(filepath)} bytes")
             logger.info(f"Loaded audio segment: {len(audio_segment)}ms, {audio_segment.frame_rate}Hz, {audio_segment.channels} channels")
-            
+
             # Get channel-specific volume sensitivity
             volume_sensitivity = self.channels[channel_id].get("volume_sensitivity", 0.01)
-            
+
             # Calculate overall audio levels for logging
             rms_level = self.calculate_rms_level(audio_segment)
             max_db = audio_segment.max_dBFS if len(audio_segment) > 0 else -float('inf')
-            
+
             logger.info(f"Audio levels: max_dBFS={max_db:.1f}, RMS={rms_level:.4f}")
             logger.info(f"Volume sensitivity threshold: {volume_sensitivity}")
             logger.info(f"Audio padding enabled: {self.audio_padding}ms")
-            
+
             # Find audio segments
             audio_segments = self.find_audio_segments(audio_segment, volume_sensitivity)
-            
+
             logger.info(f"Found {len(audio_segments)} audio segments")
-            
+
             saved_count = 0
             filtered_count = 0
-            
+
             # Process each detected audio segment
             for start_ms, end_ms in audio_segments:
                 transmission_length = end_ms - start_ms
                 logger.info(f"Audio segment detected: {transmission_length}ms (range: {start_ms}-{end_ms})")
-                
+
                 # Filter by transmission length
                 if self.min_transmission_length <= transmission_length <= self.max_transmission_length:
                     # Save the transmission
                     timestamp = self.get_timestamp()
                     saved_file = self.save_transmission_ffmpeg(filepath, start_ms, end_ms, channel_id, timestamp)
-                    
+
                     if saved_file:
                         logger.info(f"Saved transmission: {saved_file} (RMS: {rms_level:.4f})")
                         saved_count += 1
@@ -293,15 +296,15 @@ class AudioRecorder:
                 else:
                     logger.info(f"Transmission filtered out: {transmission_length}ms (too short/long)")
                     filtered_count += 1
-            
+
             logger.info(f"Segment processing complete: {saved_count} transmissions saved, {filtered_count} filtered out")
             logger.info(f"Successfully processed segment for {channel_id}")
-            
+
         except Exception as e:
             logger.error(f"Error processing audio segment: {e}")
             import traceback
             traceback.print_exc()
-        
+
         finally:
             # Ensure temp file is always cleaned up, even if processing fails
             try:
@@ -313,10 +316,10 @@ class AudioRecorder:
 
     def cleanup_temp_files(self, max_age_hours=1):
         """Clean up old temporary files
-        
+
         Args:
             max_age_hours: Maximum age in hours. Set to 0 to remove all temp files regardless of age.
-        
+
         Returns:
             int: Number of files removed
         """
@@ -324,7 +327,7 @@ class AudioRecorder:
             current_time = time.time()
             max_age_seconds = max_age_hours * 3600
             removed_count = 0
-            
+
             for channel_id in self.channels:
                 channel_dir = os.path.join(self.output_dir, channel_id)
                 if os.path.exists(channel_dir):
@@ -346,14 +349,14 @@ class AudioRecorder:
                                         removed_count += 1
                             except Exception as e:
                                 logger.warning(f"Failed to remove temp file {filepath}: {e}")
-            
+
             if removed_count > 0:
                 logger.info(f"Cleanup complete: removed {removed_count} temporary files")
             else:
                 logger.info("No temporary files found to remove")
-                
+
             return removed_count
-                
+
         except Exception as e:
             logger.error(f"Error during temp file cleanup: {e}")
             return 0
@@ -364,7 +367,7 @@ class AudioRecorder:
             while True:
                 time.sleep(3600)  # Run every hour
                 self.cleanup_temp_files()
-        
+
         cleanup_thread = threading.Thread(target=cleanup_worker, daemon=True)
         cleanup_thread.start()
         logger.info("Background temp file cleanup scheduler started")
@@ -375,42 +378,42 @@ class AudioRecorder:
             if channel_id not in self.channels:
                 logger.error(f"Channel {channel_id} not found in configuration")
                 continue
-                
+
             if self.is_recording.get(channel_id, False):
                 logger.warning(f"Channel {channel_id} is already recording")
                 continue
-            
+
             channel_info = self.channels[channel_id]
             if not channel_info.get('enabled', True):
                 logger.info(f"Channel {channel_id} is disabled, skipping")
                 continue
-            
+
             logger.info(f"Starting stream for channel: {channel_info['name']} ({channel_info['url']})")
-            
+
             # Start recording thread
             self.is_recording[channel_id] = True
             thread = threading.Thread(target=self._record_channel, args=(channel_id,))
             thread.daemon = True
             thread.start()
             self.recording_threads[channel_id] = thread
-            
+
             logger.info(f"Started recording thread for: {channel_id}")
 
     def stop_recording(self, channel_ids=None):
         """Stop recording for specified channels or all if None"""
         if channel_ids is None:
             channel_ids = list(self.is_recording.keys())
-        
+
         for channel_id in channel_ids:
             if channel_id in self.is_recording:
                 logger.info(f"Stopping recording for: {channel_id}")
                 self.is_recording[channel_id] = False
-                
+
                 # Wait for thread to finish
                 if channel_id in self.recording_threads:
                     self.recording_threads[channel_id].join(timeout=10)
                     del self.recording_threads[channel_id]
-                
+
                 logger.info(f"Stopped recording for channel: {self.channels[channel_id]['name']}")
 
     def get_status(self):
@@ -430,41 +433,54 @@ class AudioRecorder:
         """Record audio from a single channel"""
         channel_info = self.channels[channel_id]
         url = channel_info['url']
-        
+
+        # Build auth if this channel has creds
+        auth = None
+        if channel_info.get("username") and channel_info.get("password"):
+            auth = requests.auth.HTTPBasicAuth(
+                channel_info["username"],
+                channel_info["password"]
+            )
+
         while self.is_recording.get(channel_id, False):
             try:
                 # Create temp file for this segment
                 timestamp = self.get_timestamp()
                 channel_dir = os.path.join(self.output_dir, channel_id)
                 temp_file = os.path.join(channel_dir, f"temp_{timestamp}_{channel_id}.mp3")
-                
+
                 # Stream audio and save to temp file
-                response = requests.get(url, stream=True, timeout=30)
-                
+                response = requests.get(
+                    url,
+                    stream=True,
+                    timeout=30,
+                    auth=auth
+                )
+
                 if response.status_code == 200:
                     content_type = response.headers.get('content-type', '')
                     logger.info(f"Stream content type for {channel_id}: {content_type}")
                     logger.info(f"Creating temp file: {temp_file}")
-                    
+
                     bytes_written = 0
                     start_time = time.time()
-                    
+
                     with open(temp_file, 'wb') as f:
                         for chunk in response.iter_content(chunk_size=8192):
                             if not self.is_recording.get(channel_id, False):
                                 break
-                                
+
                             if chunk:
                                 f.write(chunk)
                                 bytes_written += len(chunk)
-                                
+
                             # Check if we've reached our chunk duration
                             if time.time() - start_time >= self.chunk_duration:
                                 break
-                    
+
                     elapsed_time = time.time() - start_time
                     logger.info(f"Finished recording segment for {channel_id}: {bytes_written} bytes written in {elapsed_time:.1f}s")
-                    
+
                     # Process the recorded segment
                     if bytes_written > 0:
                         self.process_audio_segment(temp_file, channel_id)
@@ -477,7 +493,7 @@ class AudioRecorder:
                 else:
                     logger.error(f"Failed to connect to {channel_id}: HTTP {response.status_code}")
                     time.sleep(5)  # Wait before retrying
-                    
+
             except Exception as e:
                 logger.error(f"Error recording {channel_id}: {e}")
                 time.sleep(5)  # Wait before retrying
@@ -485,20 +501,20 @@ class AudioRecorder:
     def get_recordings(self, channel_id=None, limit=50):
         """Get list of recordings"""
         recordings = []
-        
+
         channels_to_check = [channel_id] if channel_id else self.channels.keys()
-        
+
         for ch_id in channels_to_check:
             channel_dir = os.path.join(self.output_dir, ch_id)
             if os.path.exists(channel_dir):
                 files = os.listdir(channel_dir)
                 flac_files = [f for f in files if f.endswith('.flac') and not f.startswith('temp_')]
                 flac_files.sort(reverse=True)  # Most recent first
-                
+
                 for filename in flac_files[:limit]:
                     filepath = os.path.join(channel_dir, filename)
                     stat = os.stat(filepath)
-                    
+
                     recording_info = {
                         'filename': filename,
                         'channel_id': ch_id,
@@ -508,7 +524,7 @@ class AudioRecorder:
                         'modified_time': datetime.fromtimestamp(stat.st_mtime).isoformat(),
                         'file_path': filepath
                     }
-                    
+
                     # Load metadata if available
                     metadata_file = filepath.replace('.flac', '_metadata.json')
                     if os.path.exists(metadata_file):
@@ -518,23 +534,23 @@ class AudioRecorder:
                             recording_info.update(metadata)
                         except Exception as e:
                             logger.warning(f"Failed to load metadata from {metadata_file}: {e}")
-                    
+
                     recordings.append(recording_info)
-        
+
         return sorted(recordings, key=lambda x: x['modified_time'], reverse=True)[:limit]
 
     def get_channel_recordings(self, channel_id, limit=50, offset=0, start_date=None, end_date=None):
         """Get recordings for a specific channel with filtering options"""
         recordings = []
-        
+
         channel_dir = os.path.join(self.output_dir, channel_id)
         if not os.path.exists(channel_dir):
             return recordings
-            
+
         files = os.listdir(channel_dir)
         flac_files = [f for f in files if f.endswith('.flac') and not f.startswith('temp_')]
         flac_files.sort(reverse=True)  # Most recent first
-        
+
         # Parse date filters
         start_dt = None
         end_dt = None
@@ -548,18 +564,18 @@ class AudioRecorder:
                 end_dt = datetime.fromisoformat(end_date.replace('T', ' '))
             except Exception:
                 pass
-        
+
         for filename in flac_files:
             filepath = os.path.join(channel_dir, filename)
             stat = os.stat(filepath)
             modified_time = datetime.fromtimestamp(stat.st_mtime)
-            
+
             # Apply date filtering
             if start_dt and modified_time < start_dt:
                 continue
             if end_dt and modified_time > end_dt:
                 continue
-            
+
             recording_info = {
                 'filename': filename,
                 'channel_id': channel_id,
@@ -569,7 +585,7 @@ class AudioRecorder:
                 'modified_time': modified_time.isoformat(),
                 'file_path': filepath
             }
-            
+
             # Load metadata if available
             metadata_file = filepath.replace('.flac', '_metadata.json')
             if os.path.exists(metadata_file):
@@ -579,9 +595,9 @@ class AudioRecorder:
                     recording_info.update(metadata)
                 except Exception as e:
                     logger.warning(f"Failed to load metadata from {metadata_file}: {e}")
-            
+
             recordings.append(recording_info)
-        
+
         # Apply offset and limit
         start_idx = offset
         end_idx = offset + limit

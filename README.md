@@ -160,11 +160,14 @@ Edit `radio_channels.json` to add/modify channels:
       "url": "https://stream.url/path",
       "enabled": true,
       "group": "Category",
-      "volume_sensitivity": 0.01
+      "volume_sensitivity": 0.01,
+      "username": "",
+      "password: ""
     }
   ]
 }
 ```
+The username and password fields are required for auth-protected streams; if your stream doesn’t require authentication, leave them blank.
 
 ### Audio Settings
 Key parameters in `audio_recorder.py`:
