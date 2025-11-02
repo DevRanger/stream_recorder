@@ -14,7 +14,10 @@ All notable changes to the Radio Stream Recorder project will be documented in t
 - Add optional `username` / `password` fields to `radio_channels.json` for HTTP Basic Auth  
 - Update `audio_recorder.py` to send Basic Auth using `requests.auth.HTTPBasicAuth` if credentials are present  
 - Update `README` with instructions for authentication (credentials can be left blank for public streams)  
-- No behavior change for channels without authentication  
+- No behavior change for channels without authentication
+- General code cleanup (helps make it easier to read)
+- Add sorting by group/channel/minutes
+- Fixed recording timestamps (now shown in browser’s local timezone (files still saved in UTC))
 
 
 ## [1.1.0] - 2025-08-31
