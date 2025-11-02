@@ -43,26 +43,19 @@ A comprehensive Python application for recording and managing radio transmission
 
 ## Recent Improvements
 
-### Latest Updates (August 2025)
-- **Modal Window Enhancements**: 
-  - Added refresh button to update recording lists in real-time
-  - Fixed timezone display issues - timestamps now show correct local time
-  - Improved modal header with better control layout
-- **Batch Download Feature**: 
-  - "Download Selected" button for concatenating multiple recordings
-  - Automatic chronological sorting (oldest to newest)
-  - Single FLAC output with descriptive filenames
-  - Progress indicators and error handling
-- **Production Compatibility**: 
-  - Fixed hardcoded paths for deployment flexibility
-  - Works correctly regardless of working directory
-  - Container and service-ready deployment
-- **FLAC Audio Format**: Upgraded from MP3 to lossless FLAC format
-- **Enhanced Voice Detection**: Configurable 4-second silence gap prevents premature recording stops
-- **Project Cleanup**: Removed redundant files and organized codebase
-- **Improved Documentation**: Comprehensive docs in `docs/` directory
-- **Better Testing**: Organized test suite in `dev/` and `tests/` directories
-- **Streamlined Configuration**: Simplified channel setup with volume sensitivity controls
+### Latest Updates (November 2025)
+**Performance and usability improvements**
+
+- The site now loads faster thanks to background caching and quicker file reads.  
+- Recording lists update instantly instead of waiting for long calculations.  
+- Added a setting (`STATS_REFRESH_SEC`, default 30 s) to control how often cached data refreshes.  
+- You can now secure specific streams using optional `username` and `password` fields in `radio_channels.json`.  
+- Streams without login details continue to work as before.  
+- Added sorting options for group, channel, and total minutes.  
+- Recording times now automatically display in your local timezone (files are still stored in UTC).  
+- Cleaned up and simplified code for easier maintenance.
+
+> 💡 For detailed technical changes, see the full [CHANGELOG.md](CHANGELOG.md).
 
 ## Project Structure
 
@@ -234,7 +227,7 @@ Select multiple recordings in any channel's modal window and use the "Download S
 ### Enhanced Modal Interface
 - **Refresh Button**: Update recording lists without closing the modal
 - **Improved Layout**: Better organized controls and visual feedback
-- **Accurate Timestamps**: Fixed timezone display issues (all times in local PDT)
+- **Accurate Timestamps**: Fixed timezone display issues (all UI timestamps use browser time)
 - **Batch Operations**: Select multiple recordings for playback or download
 
 ### Production Ready

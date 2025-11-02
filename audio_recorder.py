@@ -11,6 +11,7 @@ import requests
 import numpy as np
 import queue
 from datetime import datetime
+from datetime import timezone
 from pydub import AudioSegment
 import logging
 import subprocess
@@ -226,7 +227,7 @@ class AudioRecorder:
                     "channel": self.channels[channel_id]["name"],
                     "timestamp": timestamp,
                     "duration_ms": end_ms - start_ms,
-                    "start_time": datetime.now().isoformat(),
+                    "start_time": datetime.now(timezone.utc).isoformat(),
                     "source_file": os.path.basename(source_file),
                     "extraction_method": "ffmpeg_flac"
                 }
@@ -520,8 +521,8 @@ class AudioRecorder:
                         'channel_id': ch_id,
                         'channel_name': self.channels[ch_id]['name'],
                         'file_size': stat.st_size,
-                        'created_time': datetime.fromtimestamp(stat.st_ctime).isoformat(),
-                        'modified_time': datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                        'created_time': datetime.fromtimestamp(stat.st_ctime, tz=timezone.utc).isoformat(),
+                        'modified_time': datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat(),
                         'file_path': filepath
                     }
 
@@ -581,8 +582,8 @@ class AudioRecorder:
                 'channel_id': channel_id,
                 'channel_name': self.channels.get(channel_id, {}).get('name', channel_id),
                 'file_size': stat.st_size,
-                'created_time': datetime.fromtimestamp(stat.st_ctime).isoformat(),
-                'modified_time': modified_time.isoformat(),
+                'created_time': datetime.fromtimestamp(stat.st_ctime, tz=timezone.utc).isoformat(),
+                'modified_time': modified_time.astimezone(timezone.utc).isoformat(),
                 'file_path': filepath
             }
 
