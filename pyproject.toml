@@ -1,6 +1,6 @@
 [project]
 name = "stream-recorder"
-version = "1.0.0"
+version = "1.1.1"
 description = "Radio stream recorder with simplified RMS-based audio detection and FLAC output"
 readme = "README.md"
 authors = [

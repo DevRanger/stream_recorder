@@ -167,17 +167,9 @@
     }
 
     @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-
-      100% {
-        opacity: 1;
-      }
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
 
     .main-content {
@@ -227,14 +219,16 @@
       letter-spacing: 0.5px;
     }
 
+    /* sortable header indicators */
+    .channels-table th[data-sort="asc"]::after  { content: " ▲"; }
+    .channels-table th[data-sort="desc"]::after { content: " ▼"; }
+
     .channels-table td {
       color: #bdc3c7;
       font-size: 0.85em;
     }
 
-    .channels-table tr:hover {
-      background: #3a4f63;
-    }
+    .channels-table tr:hover { background: #3a4f63; }
 
     .channel-name {
       font-weight: 600;
@@ -242,10 +236,7 @@
       cursor: pointer;
       text-decoration: underline;
     }
-
-    .channel-name:hover {
-      color: #3498db;
-    }
+    .channel-name:hover { color: #3498db; }
 
     .status-indicator {
       width: 8px;
@@ -254,15 +245,8 @@
       display: inline-block;
       margin-right: 5px;
     }
-
-    .status-recording {
-      background: #e74c3c;
-      animation: pulse 1.5s infinite;
-    }
-
-    .status-idle {
-      background: #95a5a6;
-    }
+    .status-recording { background: #e74c3c; animation: pulse 1.5s infinite; }
+    .status-idle { background: #95a5a6; }
 
     .btn-table {
       padding: 4px 8px;
@@ -276,408 +260,128 @@
       letter-spacing: 0.5px;
     }
 
-    .recent-recordings {
-      font-size: 0.75em;
-      max-width: 200px;
-    }
+    .recent-recordings { font-size: 0.75em; max-width: 200px; }
 
     .recording-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 2px 0;
-      border-bottom: 1px solid #444;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2px 0; border-bottom: 1px solid #444;
     }
+    .recording-item:last-child { border-bottom: none; }
 
-    .recording-item:last-child {
-      border-bottom: none;
-    }
-
-    .recording-time {
-      color: #95a5a6;
-    }
+    .recording-time { color: #95a5a6; }
 
     .play-btn {
-      background: #27ae60;
-      color: white;
-      border: none;
-      border-radius: 2px;
-      padding: 2px 6px;
-      cursor: pointer;
-      font-size: 10px;
+      background: #27ae60; color: white; border: none; border-radius: 2px;
+      padding: 2px 6px; cursor: pointer; font-size: 10px;
     }
+    .play-btn:hover { background: #2ecc71; }
 
-    .play-btn:hover {
-      background: #2ecc71;
-    }
-
-    .recording-list {
-      max-height: 500px;
-      overflow-y: auto;
-    }
+    .recording-list { max-height: 500px; overflow-y: auto; }
 
     .recording-item {
-      background: #2c3e50;
-      margin: 4px 0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background 0.3s ease;
-      font-size: 0.9em;
+      background: #2c3e50; margin: 4px 0; padding: 8px 12px; border-radius: 6px;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.3s ease; font-size: 0.9em;
     }
+    .recording-item:hover { background: #34495e; }
 
-    .recording-item:hover {
-      background: #34495e;
-    }
-
-    .recording-info {
-      flex: 1;
-    }
-
-    .recording-name {
-      font-weight: 600;
-      color: #ecf0f1;
-      margin-bottom: 4px;
-    }
-
-    .recording-meta {
-      font-size: 0.9em;
-      color: #bdc3c7;
-    }
-
-    .recording-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+    .recording-info { flex: 1; }
+    .recording-name { font-weight: 600; color: #ecf0f1; margin-bottom: 4px; }
+    .recording-meta { font-size: 0.9em; color: #bdc3c7; }
+    .recording-actions { display: flex; gap: 8px; align-items: center; }
 
     .btn-small {
-      padding: 6px 12px;
-      font-size: 12px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      padding: 6px 12px; font-size: 12px; border-radius: 4px; border: none;
+      cursor: pointer; transition: all 0.3s ease;
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 15px; margin-bottom: 20px;
     }
 
-    .stat-card {
-      background: #2c3e50;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-      border-top: 3px solid #3498db;
-    }
+    .stat-card { background: #2c3e50; padding: 15px; border-radius: 8px; text-align: center; border-top: 3px solid #3498db; }
+    .stat-number { font-size: 2em; font-weight: bold; color: #3498db; }
+    .stat-label { color: #bdc3c7; font-size: 0.9em; }
 
-    .stat-number {
-      font-size: 2em;
-      font-weight: bold;
-      color: #3498db;
-    }
-
-    .stat-label {
-      color: #bdc3c7;
-      font-size: 0.9em;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 20px;
-      color: #bdc3c7;
-    }
-
-    .error {
-      background: #e74c3c;
-      color: white;
-      padding: 10px;
-      border-radius: 6px;
-      margin: 10px 0;
-    }
-
-    .success {
-      background: #27ae60;
-      color: white;
-      padding: 10px;
-      border-radius: 6px;
-      margin: 10px 0;
-    }
+    .loading { text-align: center; padding: 20px; color: #bdc3c7; }
+    .error { background: #e74c3c; color: white; padding: 10px; border-radius: 6px; margin: 10px 0; }
+    .success { background: #27ae60; color: white; padding: 10px; border-radius: 6px; margin: 10px 0; }
 
     .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
     }
-
     .modal-content {
-      background: #34495e;
-      margin: 2% auto;
-      padding: 15px;
-      border-radius: 10px;
-      width: 95%;
-      max-width: 1000px;
-      max-height: 90vh;
-      overflow-y: auto;
+      background: #34495e; margin: 2% auto; padding: 15px; border-radius: 10px;
+      width: 95%; max-width: 1000px; max-height: 90vh; overflow-y: auto;
     }
-
     .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 8px;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+      border-bottom: 2px solid #3498db; padding-bottom: 8px;
     }
-
-    .modal-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .modal-controls { display: flex; align-items: center; gap: 10px; }
 
     .refresh-btn {
-      background: #3498db;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
+      background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px;
+      cursor: pointer; font-size: 14px; transition: background-color 0.3s ease;
     }
+    .refresh-btn:hover { background: #2980b9; }
+    .refresh-btn:active { background: #21618c; }
 
-    .refresh-btn:hover {
-      background: #2980b9;
-    }
+    .close { color: #bdc3c7; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s ease; }
+    .close:hover { color: #ecf0f1; }
 
-    .refresh-btn:active {
-      background: #21618c;
-    }
+    .audio-player { width: 100%; margin: 10px 0; }
 
-    .close {
-      color: #bdc3c7;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .close:hover {
-      color: #ecf0f1;
-    }
-
-    .audio-player {
-      width: 100%;
-      margin: 10px 0;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
+    .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
     .page-btn {
-      padding: 8px 12px;
-      background: #2c3e50;
-      border: 1px solid #34495e;
-      color: #ecf0f1;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all 0.3s ease;
+      padding: 8px 12px; background: #2c3e50; border: 1px solid #34495e; color: #ecf0f1;
+      cursor: pointer; border-radius: 4px; transition: all 0.3s ease;
     }
+    .page-btn:hover:not(.disabled) { background: #34495e; }
+    .page-btn.active { background: #3498db; border-color: #3498db; }
+    .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .page-btn:hover:not(.disabled) {
-      background: #34495e;
-    }
-
-    .page-btn.active {
-      background: #3498db;
-      border-color: #3498db;
-    }
-
-    .page-btn.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .timezone-info {
-      font-size: 0.8em;
-      color: #95a5a6;
-      margin-top: 5px;
-    }
+    .timezone-info { font-size: 0.8em; color: #95a5a6; margin-top: 5px; }
 
     /* Modal-specific compact styles */
-    .modal .recording-item {
-      margin: 2px 0;
-      padding: 6px 10px;
-      font-size: 0.85em;
-    }
-
-    .modal .recording-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .modal .recording-name {
-      font-weight: 500;
-      color: #ecf0f1;
-      margin-bottom: 2px;
-      font-size: 0.9em;
-    }
-
-    .modal .recording-meta {
-      font-size: 0.8em;
-      color: #bdc3c7;
-      line-height: 1.2;
-    }
-
-    .modal .recording-actions {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .modal .btn-small {
-      padding: 4px 8px;
-      font-size: 11px;
-      border-radius: 3px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+    .modal .recording-item { margin: 2px 0; padding: 6px 10px; font-size: 0.85em; }
+    .modal .recording-info { flex: 1; min-width: 0; }
+    .modal .recording-name { font-weight: 500; color: #ecf0f1; margin-bottom: 2px; font-size: 0.9em; }
+    .modal .recording-meta { font-size: 0.8em; color: #bdc3c7; line-height: 1.2; }
+    .modal .recording-actions { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
+    .modal .btn-small { padding: 4px 8px; font-size: 11px; border-radius: 3px; border: none; cursor: pointer; transition: all 0.2s ease; }
 
     /* Checkbox styles for batch selection */
-    .recording-checkbox {
-      margin-right: 10px;
-      transform: scale(1.2);
-    }
+    .recording-checkbox { margin-right: 10px; transform: scale(1.2); }
 
     .batch-controls {
-      background: #f5f5f5;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
+      background: #f5f5f5; padding: 15px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ddd;
     }
+    .batch-controls h3 { margin: 0 0 10px 0; font-size: 1em; color: #333; }
 
-    .batch-controls h3 {
-      margin: 0 0 10px 0;
-      font-size: 1em;
-      color: #333;
-    }
-
-    .batch-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .selected-count {
-      background: #007bff;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.8em;
-      font-weight: bold;
-    }
-
-    .btn-batch {
-      background: #28a745;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9em;
-      transition: background-color 0.2s;
-    }
-
-    .btn-batch:hover {
-      background: #218838;
-    }
-
-    .btn-batch:disabled {
-      background: #6c757d;
-      cursor: not-allowed;
-    }
-
-    .btn-select-all {
-      background: #17a2b8;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8em;
-    }
-
-    .btn-select-all:hover {
-      background: #138496;
-    }
+    .batch-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .selected-count { background: #007bff; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; }
+    .btn-batch { background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9em; transition: background-color 0.2s; }
+    .btn-batch:hover { background: #218838; }
+    .btn-batch:disabled { background: #6c757d; cursor: not-allowed; }
+    .btn-select-all { background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+    .btn-select-all:hover { background: #138496; }
 
     /* Date filter styles for modal */
     .date-filters {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-      padding: 10px;
-      background: #2c3e50;
-      border-radius: 6px;
-      align-items: center;
-      flex-wrap: wrap;
+      display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #2c3e50;
+      border-radius: 6px; align-items: center; flex-wrap: wrap;
     }
-
-    .date-input-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .date-input-group label {
-      font-size: 0.9em;
-      color: #bdc3c7;
-      white-space: nowrap;
-    }
-
+    .date-input-group { display: flex; align-items: center; gap: 5px; }
+    .date-input-group label { font-size: 0.9em; color: #bdc3c7; white-space: nowrap; }
     .date-input-group input {
-      padding: 4px 6px;
-      border: 1px solid #34495e;
-      border-radius: 3px;
-      background: #34495e;
-      color: #ecf0f1;
-      font-size: 0.85em;
+      padding: 4px 6px; border: 1px solid #34495e; border-radius: 3px; background: #34495e; color: #ecf0f1; font-size: 0.85em;
     }
-
-    .filter-btn {
-      padding: 6px 12px;
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85em;
-      transition: background 0.3s ease;
-    }
-
-    .filter-btn:hover {
-      background: #2980b9;
-    }
+    .filter-btn { padding: 6px 12px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em; transition: background 0.3s ease; }
+    .filter-btn:hover { background: #2980b9; }
   </style>
 </head>
 
@@ -688,9 +392,8 @@
       <p class="subtitle">
         Experimental recording of emergency services
         communications
-      </p>
       <div class="timezone-info">
-        All times are approximate and displayed in Pacific timezone (PST/PDT)
+        All times are shown in your local timezone (<span id="tzDisplay"></span>).
       </div>
     </div>
 
@@ -777,31 +480,53 @@
   </div>
 
   <script>
-    //console.log("Script tag loaded successfully");
-
     // Immediately try to call the API to test
-    fetch("/api/channels")
-      .then(response => {
-        //console.log("API Response:", response);
-        return response.json();
-      })
-      .then(data => {
-        //console.log("API Data:", data);
-      })
-      .catch(error => {
-        console.error("API Error:", error);
-      });
+    fetch("/api/channels").then(r => r.json()).catch(e => console.error("API Error:", e));
 
     let refreshInterval;
     let currentChannelStats = {};
     let currentChannelId = null;
     let currentChannelName = null;
 
-    // Los Angeles timezone offset
     const LA_TIMEZONE = "America/Los_Angeles";
 
+    // ---- sorting helper (new) ----
+    function enableTableSorting(table) {
+      const headerCells = table.tHead?.rows[0]?.cells || [];
+      [...headerCells].forEach((th, colIdx) => {
+        const type = th.dataset.type; // "text" | "number"
+        if (!type) return;
+        th.style.cursor = "pointer";
+        th.addEventListener("click", () => {
+          const current = th.dataset.sort || "none";
+          const dir = current === "asc" ? "desc" : "asc";
+          [...headerCells].forEach(h => h.removeAttribute("data-sort"));
+          th.setAttribute("data-sort", dir);
+
+          const rows = [...table.tBodies[0].rows];
+          const collator = new Intl.Collator(undefined, { sensitivity: "base" });
+
+          rows.sort((a, b) => {
+            let av = a.cells[colIdx].innerText.trim();
+            let bv = b.cells[colIdx].innerText.trim();
+            if (type === "number") {
+              av = parseFloat(av) || 0;
+              bv = parseFloat(bv) || 0;
+              return av - bv;
+            }
+            return collator.compare(av, bv);
+          });
+
+          if (dir === "desc") rows.reverse();
+          const frag = document.createDocumentFragment();
+          rows.forEach(r => frag.appendChild(r));
+          table.tBodies[0].appendChild(frag);
+        });
+      });
+    }
+    // -------------------------------
+
     async function loadChannels() {
-      //console.log("Loading channels...");
       try {
         const [channelsResponse, statusResponse, minutesResponse] = await Promise.all([
           fetch("/api/channels"),
@@ -815,7 +540,6 @@
         console.log("Channels loaded:", Object.keys(channels).length);
 
         const container = document.getElementById("channelsContainer");
-        // Clear any existing content
         container.innerHTML = "";
 
         if (Object.keys(channels).length === 0) {
@@ -823,61 +547,50 @@
           return;
         }
 
-        // Create table
         const table = document.createElement("table");
         table.className = "channels-table";
 
-        // Create header
+        // header now has data-type attributes (new)
         table.innerHTML = `
-            <thead>
-              <tr>
-                <th>Group</th>
-                <th>Channel</th>
-                <th>Minutes for 7 days</th>
-              </tr>
-            </thead>
-            <tbody id="channelsTableBody">
-            </tbody>
-          `;
+          <thead>
+            <tr>
+              <th data-type="text">Group</th>
+              <th data-type="text">Channel</th>
+              <th data-type="number">Minutes for 7 days</th>
+            </tr>
+          </thead>
+          <tbody id="channelsTableBody"></tbody>
+        `;
 
         const tbody = table.querySelector("#channelsTableBody");
 
-        // Create rows for each channel
         Object.entries(channels).forEach(([channelId, channel]) => {
           const minutes = channelMinutes[channelId] || 0;
-          // Format minutes: show "0.0" for zero, "0.X" for values 0 < value < 1, normal for >= 1
-          const formattedMinutes = minutes < 1 ? 
-            minutes.toFixed(1).padStart(3, '0') : 
-            minutes.toFixed(1);
+          const formattedMinutes = minutes < 1 ? minutes.toFixed(1).padStart(3, '0') : minutes.toFixed(1);
           const row = document.createElement("tr");
           row.innerHTML = `
-              <td>${channel.group || "Unknown"}</td>
-              <td>
-                <div class="channel-name" data-channel-id="${channelId}" data-channel-name="${channel.name.replace(/"/g, '&quot;')}">
-                  ${channel.name}
-                </div>
-              </td>
-              <td>${formattedMinutes}</td>
-            `;
-
+            <td>${channel.group || "Unknown"}</td>
+            <td>
+              <div class="channel-name" data-channel-id="${channelId}" data-channel-name="${channel.name.replace(/"/g, '&quot;')}">
+                ${channel.name}
+              </div>
+            </td>
+            <td>${formattedMinutes}</td>
+          `;
           tbody.appendChild(row);
         });
 
         container.appendChild(table);
 
+        // enable sorting (new)
+        enableTableSorting(table);
+
         // Add click event listeners to channel names
         const channelElements = document.querySelectorAll('.channel-name');
-        //console.log(`Adding click listeners to ${channelElements.length} channel elements`);
-        //console.log('First few channel elements:', channelElements);
-
-        channelElements.forEach((element, index) => {
-          //console.log(`Adding listener to element ${index}:`, element);
-          element.addEventListener('click', function (event) {
-            //console.log('Click event triggered!', event);
+        channelElements.forEach((element) => {
+          element.addEventListener('click', function () {
             const channelId = this.getAttribute('data-channel-id');
             const channelName = this.getAttribute('data-channel-name');
-            //console.log(`Channel clicked: ${channelId} - ${channelName}`);
-
             try {
               openChannelModal(channelId, channelName);
             } catch (error) {
@@ -885,35 +598,21 @@
               alert('Error opening modal: ' + error.message);
             }
           });
-
-          // Add visual feedback on hover
           element.style.cursor = 'pointer';
         });
 
-        //console.log("Table created and added to container");
-
       } catch (error) {
         console.error("Error loading channels:", error);
-        document.getElementById("channelsContainer").innerHTML =
-          "<p>Error loading channels</p>";
+        document.getElementById("channelsContainer").innerHTML = "<p>Error loading channels</p>";
       }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      //console.log("DOM loaded - starting initialization");
-
-      // Load channels and update status
       Promise.all([loadChannels(), updateStatus()])
         .then(() => {
-          //console.log("Initial load completed");
-          // Set up auto-refresh every 5 seconds
-          setInterval(() => {
-            updateStatus();
-          }, 5000);
+          setInterval(() => { updateStatus(); }, 5000);
         })
-        .catch(error => {
-          console.error("Error during initialization:", error);
-        });
+        .catch(error => { console.error("Error during initialization:", error); });
     });
 
     async function updateStatus() {
@@ -921,13 +620,8 @@
         const response = await fetch("/api/status");
         const status = await response.json();
 
-        const recordingChannels = Object.values(status).filter(
-          (s) => s.recording
-        ).length;
+        const recordingChannels = Object.values(status).filter((s) => s.recording).length;
 
-        //console.log(`Status update: ${recordingChannels} recording channels`);
-
-        // Update system status
         const systemStatus = document.getElementById("systemStatus");
         const systemStatusText = document.getElementById("systemStatusText");
 
@@ -939,19 +633,14 @@
           systemStatusText.textContent = "System Idle";
         }
 
-        // Update active channels count
         const activeChannelsElement = document.getElementById("activeChannels");
-        //console.log(`Updating activeChannels element with: ${recordingChannels}`);
         if (activeChannelsElement) {
           activeChannelsElement.textContent = recordingChannels;
         } else {
           console.error("activeChannels element not found!");
         }
 
-        // Update total recordings count for today
         updateTodaysRecordingCount();
-        
-        // Update channel minutes
         updateChannelMinutes();
       } catch (error) {
         console.error("Error updating status:", error);
@@ -959,8 +648,7 @@
         const systemStatusText = document.getElementById("systemStatusText");
         systemStatus.className = "status-indicator status-idle";
         systemStatusText.textContent = "Connection Error";
-        
-        // Also update active channels and total recordings to show error state
+
         const activeChannelsElement = document.getElementById("activeChannels");
         if (activeChannelsElement) {
           activeChannelsElement.textContent = "N/A";
@@ -973,7 +661,6 @@
       try {
         const response = await fetch("/api/stats");
         const stats = await response.json();
-        
         if (stats.total && typeof stats.total.today === 'number') {
           document.getElementById("totalRecordings").textContent = stats.total.today;
         } else {
@@ -989,8 +676,7 @@
       try {
         const response = await fetch("/api/channel-minutes");
         const channelMinutes = await response.json();
-        
-        // Update each channel's minutes in the table
+
         const table = document.querySelector('.channels-table');
         if (table) {
           const rows = table.querySelectorAll('tbody tr');
@@ -998,13 +684,10 @@
             const channelNameDiv = row.querySelector('.channel-name');
             if (channelNameDiv) {
               const channelId = channelNameDiv.getAttribute('data-channel-id');
-              const minutesCell = row.cells[2]; // Third column (Minutes for 7 days)
+              const minutesCell = row.cells[2];
               if (minutesCell && channelId) {
                 const minutes = channelMinutes[channelId] || 0;
-                // Format minutes: show "0.0" for zero, "0.X" for values 0 < value < 1, normal for >= 1
-                const formattedMinutes = minutes < 1 ? 
-                  minutes.toFixed(1).padStart(3, '0') : 
-                  minutes.toFixed(1);
+                const formattedMinutes = minutes < 1 ? minutes.toFixed(1).padStart(3, '0') : minutes.toFixed(1);
                 minutesCell.textContent = formattedMinutes;
               }
             }
@@ -1019,62 +702,32 @@
       return date.toISOString().split("T")[0];
     }
 
-    function formatDateTimeForLA(timestamp) {
+    
+    // Parse our YYYYMMDD_HHMMSS[_mmm] style timestamps as UTC, return Date in local time zone
+    function parseTimestampToUTC(ts) {
+      if (typeof ts !== 'string') return new Date(ts);
+      const m = ts.match(/^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+      if (!m) return new Date(ts);
+      const [_, y, mo, d, h, mi, s] = m;
+      return new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi, +s));
+    }
+function formatDateTimeForLA(timestamp) {
       try {
         let date;
-
-        // Handle different timestamp formats
         if (typeof timestamp === 'string') {
-          // Check if it's in format YYYYMMDD_HHMMSS_mmm
-          if (/^\d{8}_\d{6}_\d{3}/.test(timestamp)) {
-            const year = parseInt(timestamp.substring(0, 4));
-            const month = parseInt(timestamp.substring(4, 6)) - 1; // JS months are 0-based
-            const day = parseInt(timestamp.substring(6, 8));
-            const hour = parseInt(timestamp.substring(9, 11));
-            const minute = parseInt(timestamp.substring(11, 13));
-            const second = parseInt(timestamp.substring(13, 15));
-
-            // Create date object directly - filename timestamps are already in PDT
-            date = new Date(year, month, day, hour, minute, second);
-          }
-          // Check if it's in format YYYYMMDD_HHMMSS
-          else if (/^\d{8}_\d{6}/.test(timestamp)) {
-            const year = parseInt(timestamp.substring(0, 4));
-            const month = parseInt(timestamp.substring(4, 6)) - 1; // JS months are 0-based
-            const day = parseInt(timestamp.substring(6, 8));
-            const hour = parseInt(timestamp.substring(9, 11));
-            const minute = parseInt(timestamp.substring(11, 13));
-            const second = parseInt(timestamp.substring(13, 15));
-
-            // Create date object directly - filename timestamps are already in PDT
-            date = new Date(year, month, day, hour, minute, second);
-          }
-          // Try to parse as ISO string or other standard formats
-          else {
+          if (/^\d{8}_\d{6}/.test(timestamp)) {
+            date = parseTimestampToUTC(timestamp);
+          } else {
             date = new Date(timestamp);
           }
         } else {
-          // Assume it's already a Date object or timestamp number
           date = new Date(timestamp);
         }
-
-        // Check if date is valid
         if (isNaN(date.getTime())) {
           console.warn('Invalid date:', timestamp);
           return timestamp;
         }
-
-        // Format for display - no timezone conversion needed since timestamps are already in PDT
-        const options = {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        };
-
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
         return date.toLocaleString('en-US', options);
       } catch (e) {
         console.error('Error formatting date:', e, 'timestamp:', timestamp);
@@ -1082,20 +735,22 @@
       }
     }
 
+    // Show viewer's local tz name in header
+    (function setTzName() {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local';
+        document.getElementById('tzDisplay').textContent = tz;
+      } catch (_) { document.getElementById('tzDisplay').textContent = 'Local'; }
+    })();
+
     function showMessage(message, type = "info") {
-      //console.log(`${type.toUpperCase()}: ${message}`);
-      // Simple fallback - show as alert for errors, log others
-      if (type === "error") {
-        alert(`Error: ${message}`);
-      }
+      if (type === "error") { alert(`Error: ${message}`); }
     }
 
     async function refreshData() {
       try {
         await Promise.all([loadChannels(), loadStats(), updateStatus()]);
-        document.getElementById(
-          "lastUpdate"
-        ).textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        document.getElementById("lastUpdate").textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
       } catch (error) {
         console.error("Error refreshing data:", error);
         showMessage("Error refreshing data: " + error.message, "error");
@@ -1106,11 +761,7 @@
       try {
         const response = await fetch(`/api/recordings?channel=${channelId}&limit=1`);
         const recordings = await response.json();
-
-        if (recordings.length === 0) {
-          return 'None';
-        }
-
+        if (recordings.length === 0) { return 'None'; }
         return formatDateTimeForLA(recordings[0].timestamp);
       } catch (error) {
         console.error("Error loading latest recording:", error);
@@ -1141,50 +792,40 @@
 
         if (stats.total) {
           grid.innerHTML = `
-                        <div class="stat-card">
-                            <div class="stat-number">${stats.total.recordings
-            }</div>
-                            <div class="stat-label">Total Recordings</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">${stats.total.channels
-            }</div>
-                            <div class="stat-label">Channels</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">${formatFileSize(
-              stats.total.total_size
-            )}</div>
-                            <div class="stat-label">Total Size</div>
-                        </div>
-                    `;
+            <div class="stat-card">
+              <div class="stat-number">${stats.total.recordings}</div>
+              <div class="stat-label">Total Recordings</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${stats.total.channels}</div>
+              <div class="stat-label">Channels</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">${formatFileSize(stats.total.total_size)}</div>
+              <div class="stat-label">Total Size</div>
+            </div>
+          `;
         }
 
         container.appendChild(grid);
       } catch (error) {
-        document.getElementById("statsContainer").innerHTML =
-          '<p class="error">Error loading statistics</p>';
+        document.getElementById("statsContainer").innerHTML = '<p class="error">Error loading statistics</p>';
         throw error;
       }
     }
 
     async function openChannelModal(channelId, channelName) {
-      //console.log(`Opening channel modal for: ${channelId}, ${channelName}`);
-
-      // Store current channel info for filtering
       currentChannelId = channelId;
       currentChannelName = channelName;
 
       document.getElementById("modalChannelName").textContent = `${channelName} Recordings`;
       document.getElementById("channelModal").style.display = "block";
 
-      // Set default date range (last 7 days) for modal date inputs
       const today = new Date();
       const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
       document.getElementById("endDate").value = formatDateForInput(today);
       document.getElementById("startDate").value = formatDateForInput(weekAgo);
 
-      // Set default times (start: 00:00, end: 23:59)
       document.getElementById("startTime").value = "00:00";
       document.getElementById("endTime").value = "23:59";
 
@@ -1207,76 +848,47 @@
           url += `&end_date=${endDateTime}`;
         }
 
-        //console.log(`Fetching recordings from: ${url}`);
         const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
+        if (!response.ok) { throw new Error(`HTTP ${response.status}: ${response.statusText}`); }
         const data = await response.json();
-        //console.log(`Received data:`, data);
-        //console.log(`Recordings array length: ${data.recordings ? data.recordings.length : 'undefined'}`);
 
         container.innerHTML = "";
-
-        // Handle both array response and object with recordings property
         const recordings = Array.isArray(data) ? data : data.recordings || [];
-        //console.log(`Processing ${recordings.length} recordings`);
 
         if (recordings.length > 0) {
           const list = document.createElement("div");
           list.className = "recording-list";
 
-          recordings.forEach((recording, index) => {
-            //console.log(`Processing recording ${index}:`, recording);
+          recordings.forEach((recording) => {
             const item = document.createElement("div");
             item.className = "recording-item";
 
-            // Simple fallback formatting
             let formattedTime = recording.timestamp || 'Unknown time';
-            try {
-              formattedTime = formatDateTimeForLA(recording.timestamp);
-            } catch (e) {
-              console.warn(`Date formatting failed for ${recording.timestamp}:`, e);
-            }
+            try { formattedTime = formatDateTimeForLA(recording.timestamp); } catch (_) {}
 
             const duration = recording.duration_ms
               ? `${(recording.duration_ms / 1000).toFixed(1)}s`
               : recording.duration ? `${recording.duration}s` : "Unknown";
 
             item.innerHTML = `
-                        <input type="checkbox" class="recording-checkbox" 
-                               data-filename="${recording.filename}"
-                               data-timestamp="${recording.timestamp}" 
-                               onchange="updateBatchControls()">
-                        <div class="recording-info">
-                            <div class="recording-name">${recording.filename
-              }</div>
-                            <div class="recording-meta">
-                                ${formattedTime} • ${duration} • ${formatFileSize(
-                recording.size || 0
-              )}
-                            </div>
-                        </div>
-                        <div class="recording-actions">
-                            <button class="btn-small btn-primary" onclick="playRecording('${recording.filename
-              }', '${channelName}')">
-                                Play
-                            </button>
-                            <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename
-              }')">
-                                Download
-                            </button>
-                        </div>
-                    `;
-
+              <input type="checkbox" class="recording-checkbox" 
+                     data-filename="${recording.filename}"
+                     data-timestamp="${recording.timestamp}" 
+                     onchange="updateBatchControls()">
+              <div class="recording-info">
+                <div class="recording-name">${recording.filename}</div>
+                <div class="recording-meta">${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}</div>
+              </div>
+              <div class="recording-actions">
+                <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${channelName}')">Play</button>
+                <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">Download</button>
+              </div>
+            `;
             list.appendChild(item);
           });
 
           container.appendChild(list);
 
-          // Add pagination info if needed
           if (!Array.isArray(data) && data.has_more) {
             const info = document.createElement("div");
             info.className = "pagination";
@@ -1284,10 +896,8 @@
             container.appendChild(info);
           }
 
-          // Update batch controls
           updateBatchControls();
         } else {
-          //console.log('No recordings found. Data structure:', data);
           container.innerHTML = `
             <p>No recordings found for this channel in the selected date range</p>
             <p style="font-size: 0.8em; color: #888;">
@@ -1297,15 +907,11 @@
               Recordings array length: ${recordings.length}
             </p>
           `;
-
-          // Hide batch controls when no recordings
           document.getElementById('batchControls').style.display = 'none';
         }
       } catch (error) {
         container.innerHTML = '<p class="error">Error loading channel recordings</p>';
         console.error("Error loading channel recordings:", error);
-
-        // Hide batch controls on error
         document.getElementById('batchControls').style.display = 'none';
       }
     }
@@ -1315,219 +921,69 @@
     }
 
     function refreshChannelRecordings() {
-      if (currentChannelId && currentChannelName) {
-        //console.log(`Refreshing recordings for channel: ${currentChannelId}`);
-        
-        // Show loading indicator
-        const container = document.getElementById("modalRecordingsContainer");
-        container.innerHTML = '<div class="loading">Refreshing recordings...</div>';
-        
-        // Use the same logic as openChannelModal but without changing the modal display
-        const refreshModal = async () => {
-          try {
-            const startDate = document.getElementById("startDate").value;
-            const endDate = document.getElementById("endDate").value;
-            const startTime = document.getElementById("startTime").value;
-            const endTime = document.getElementById("endTime").value;
+      if (!(currentChannelId && currentChannelName)) return;
 
-            let url = `/api/recordings/channel/${currentChannelId}?limit=200`;
-            if (startDate) {
-              const startDateTime = startTime ? `${startDate}T${startTime}` : startDate;
-              url += `&start_date=${startDateTime}`;
-            }
-            if (endDate) {
-              const endDateTime = endTime ? `${endDate}T${endTime}` : endDate;
-              url += `&end_date=${endDateTime}`;
-            }
-
-            //console.log(`Refreshing recordings from: ${url}`);
-            const response = await fetch(url);
-
-            if (!response.ok) {
-              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            //console.log(`Refreshed data:`, data);
-
-            container.innerHTML = "";
-
-            // Handle both array response and object with recordings property
-            const recordings = Array.isArray(data) ? data : data.recordings || [];
-            //console.log(`Processing ${recordings.length} recordings`);
-
-            if (recordings.length > 0) {
-              const list = document.createElement("div");
-              list.className = "recording-list";
-
-              recordings.forEach((recording, index) => {
-                //console.log(`Processing recording ${index}:`, recording);
-                const item = document.createElement("div");
-                item.className = "recording-item";
-
-                // Simple fallback formatting
-                let formattedTime = recording.timestamp || 'Unknown time';
-                try {
-                  formattedTime = formatDateTimeForLA(recording.timestamp);
-                } catch (e) {
-                  console.warn(`Date formatting failed for ${recording.timestamp}:`, e);
-                }
-
-                const duration = recording.duration_ms
-                  ? `${(recording.duration_ms / 1000).toFixed(1)}s`
-                  : recording.duration ? `${recording.duration}s` : "Unknown";
-
-                item.innerHTML = `
-                        <input type="checkbox" class="recording-checkbox" 
-                               data-filename="${recording.filename}"
-                               data-timestamp="${recording.timestamp}" 
-                               onchange="updateBatchControls()">
-                        <div class="recording-info">
-                            <div class="recording-name">${recording.filename}</div>
-                            <div class="recording-meta">
-                                ${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}
-                            </div>
-                        </div>
-                        <div class="recording-actions">
-                            <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${currentChannelName}')">
-                                Play
-                            </button>
-                            <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">
-                                Download
-                            </button>
-                        </div>
-                    `;
-
-                list.appendChild(item);
-              });
-
-              container.appendChild(list);
-
-              // Add pagination info if needed
-              if (!Array.isArray(data) && data.has_more) {
-                const info = document.createElement("div");
-                info.className = "pagination";
-                info.innerHTML = `<p>Showing ${recordings.length} of ${data.total} recordings</p>`;
-                container.appendChild(info);
-              }
-
-              // Update batch controls
-              updateBatchControls();
-            } else {
-              container.innerHTML = '<div class="no-recordings">No recordings found for the selected date range.</div>';
-            }
-          } catch (error) {
-            console.error('Error refreshing recordings:', error);
-            container.innerHTML = `<div class="error">Error refreshing recordings: ${error.message}</div>`;
-          }
-        };
-
-        refreshModal();
-      } else {
-        console.warn('No channel selected for refresh');
-      }
-    }
-
-    function filterRecordings() {
-      if (!currentChannelId || !currentChannelName) {
-        console.error("No channel selected for filtering");
-        return;
-      }
-
-      //console.log(`Filtering recordings for channel: ${currentChannelId}`);
-      
-      // Show loading indicator
       const container = document.getElementById("modalRecordingsContainer");
-      container.innerHTML = '<div class="loading">Filtering recordings...</div>';
-      
-      // Get the current date/time values from the form
-      const startDate = document.getElementById("startDate").value;
-      const endDate = document.getElementById("endDate").value;
-      const startTime = document.getElementById("startTime").value;
-      const endTime = document.getElementById("endTime").value;
+      container.innerHTML = '<div class="loading">Refreshing recordings...</div>';
 
-      //console.log('Filter inputs:', { startDate, endDate, startTime, endTime });
+      (async () => {
+        try {
+          const startDate = document.getElementById("startDate").value;
+          const endDate = document.getElementById("endDate").value;
+          const startTime = document.getElementById("startTime").value;
+          const endTime = document.getElementById("endTime").value;
 
-      // Build URL with date/time filters
-      let url = `/api/recordings/channel/${currentChannelId}?limit=200`;
-      
-      if (startDate) {
-        const startDateTime = startTime ? `${startDate}T${startTime}` : startDate;
-        url += `&start_date=${startDateTime}`;
-      }
-      
-      if (endDate) {
-        const endDateTime = endTime ? `${endDate}T${endTime}` : endDate;
-        url += `&end_date=${endDateTime}`;
-      }
-
-      //console.log(`Filtering recordings with URL: ${url}`);
-
-      // Fetch filtered recordings
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          let url = `/api/recordings/channel/${currentChannelId}?limit=200`;
+          if (startDate) {
+            const startDateTime = startTime ? `${startDate}T${startTime}` : startDate;
+            url += `&start_date=${startDateTime}`;
           }
-          return response.json();
-        })
-        .then(data => {
-          //console.log(`Filter returned ${Array.isArray(data) ? data.length : data.recordings?.length || 0} recordings`);
-          
-          // Handle both array response and object with recordings property
-          const recordings = Array.isArray(data) ? data : data.recordings || [];
-          
+          if (endDate) {
+            const endDateTime = endTime ? `${endDate}T${endTime}` : endDate;
+            url += `&end_date=${endDateTime}`;
+          }
+
+          const response = await fetch(url);
+          if (!response.ok) { throw new Error(`HTTP ${response.status}: ${response.statusText}`); }
+          const data = await response.json();
+
           container.innerHTML = "";
-          
+          const recordings = Array.isArray(data) ? data : data.recordings || [];
+
           if (recordings.length > 0) {
-            //console.log(`Processing ${recordings.length} recordings`);
             const list = document.createElement("div");
             list.className = "recording-list";
 
-            recordings.forEach((recording, index) => {
-              //console.log(`Processing recording ${index}:`, recording);
+            recordings.forEach((recording) => {
               const item = document.createElement("div");
               item.className = "recording-item";
 
-              // Simple fallback formatting
               let formattedTime = recording.timestamp || 'Unknown time';
-              try {
-                formattedTime = formatDateTimeForLA(recording.timestamp);
-              } catch (e) {
-                console.warn(`Date formatting failed for ${recording.timestamp}:`, e);
-              }
+              try { formattedTime = formatDateTimeForLA(recording.timestamp); } catch (_) {}
 
               const duration = recording.duration_ms
                 ? `${(recording.duration_ms / 1000).toFixed(1)}s`
                 : recording.duration ? `${recording.duration}s` : "Unknown";
 
               item.innerHTML = `
-                      <input type="checkbox" class="recording-checkbox" 
-                             data-filename="${recording.filename}"
-                             data-timestamp="${recording.timestamp}" 
-                             onchange="updateBatchControls()">
-                      <div class="recording-info">
-                          <div class="recording-name">${recording.filename}</div>
-                          <div class="recording-meta">
-                              ${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}
-                          </div>
-                      </div>
-                      <div class="recording-actions">
-                          <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${currentChannelName}')">
-                              Play
-                          </button>
-                          <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">
-                              Download
-                          </button>
-                      </div>
-                  `;
-
+                <input type="checkbox" class="recording-checkbox" 
+                       data-filename="${recording.filename}"
+                       data-timestamp="${recording.timestamp}" 
+                       onchange="updateBatchControls()">
+                <div class="recording-info">
+                  <div class="recording-name">${recording.filename}</div>
+                  <div class="recording-meta">${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}</div>
+                </div>
+                <div class="recording-actions">
+                  <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${currentChannelName}')">Play</button>
+                  <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">Download</button>
+                </div>
+              `;
               list.appendChild(item);
             });
 
             container.appendChild(list);
 
-            // Add pagination info if needed
             if (!Array.isArray(data) && data.has_more) {
               const info = document.createElement("div");
               info.className = "pagination";
@@ -1535,7 +991,88 @@
               container.appendChild(info);
             }
 
-            // Update batch controls
+            updateBatchControls();
+          } else {
+            container.innerHTML = '<div class="no-recordings">No recordings found for the selected date range.</div>';
+          }
+        } catch (error) {
+          console.error('Error refreshing recordings:', error);
+          container.innerHTML = `<div class="error">Error refreshing recordings: ${error.message}</div>`;
+        }
+      })();
+    }
+
+    function filterRecordings() {
+      if (!(currentChannelId && currentChannelName)) return;
+
+      const container = document.getElementById("modalRecordingsContainer");
+      container.innerHTML = '<div class="loading">Filtering recordings...</div>';
+
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      const startTime = document.getElementById("startTime").value;
+      const endTime = document.getElementById("endTime").value;
+
+      let url = `/api/recordings/channel/${currentChannelId}?limit=200`;
+      if (startDate) {
+        const startDateTime = startTime ? `${startDate}T${startTime}` : startDate;
+        url += `&start_date=${startDateTime}`;
+      }
+      if (endDate) {
+        const endDateTime = endTime ? `${endDate}T${endTime}` : endDate;
+        url += `&end_date=${endDateTime}`;
+      }
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          return response.json();
+        })
+        .then(data => {
+          const recordings = Array.isArray(data) ? data : data.recordings || [];
+          container.innerHTML = "";
+
+          if (recordings.length > 0) {
+            const list = document.createElement("div");
+            list.className = "recording-list";
+
+            recordings.forEach((recording) => {
+              const item = document.createElement("div");
+              item.className = "recording-item";
+
+              let formattedTime = recording.timestamp || 'Unknown time';
+              try { formattedTime = formatDateTimeForLA(recording.timestamp); } catch (_) {}
+
+              const duration = recording.duration_ms
+                ? `${(recording.duration_ms / 1000).toFixed(1)}s`
+                : recording.duration ? `${recording.duration}s` : "Unknown";
+
+              item.innerHTML = `
+                <input type="checkbox" class="recording-checkbox" 
+                       data-filename="${recording.filename}"
+                       data-timestamp="${recording.timestamp}" 
+                       onchange="updateBatchControls()">
+                <div class="recording-info">
+                  <div class="recording-name">${recording.filename}</div>
+                  <div class="recording-meta">${formattedTime} • ${duration} • ${formatFileSize(recording.size || 0)}</div>
+                </div>
+                <div class="recording-actions">
+                  <button class="btn-small btn-primary" onclick="playRecording('${recording.filename}', '${currentChannelName}')">Play</button>
+                  <button class="btn-small btn-info" onclick="downloadRecording('${recording.filename}')">Download</button>
+                </div>
+              `;
+              list.appendChild(item);
+            });
+
+            container.appendChild(list);
+
+            if (!Array.isArray(data) && data.has_more) {
+              const info = document.createElement("div");
+              info.className = "pagination";
+              info.innerHTML = `<p>Showing ${recordings.length} of ${data.total} recordings</p>`;
+              container.appendChild(info);
+            }
+
             updateBatchControls();
           } else {
             container.innerHTML = '<div class="no-recordings">No recordings found for the selected date range.</div>';
@@ -1556,10 +1093,8 @@
     };
 
     function getAudioSources(filename) {
-      // Generate appropriate audio source tags based on file extension
       const fileExtension = filename.toLowerCase().split('.').pop();
       const baseSrc = `/api/recording/${filename}`;
-      
       if (fileExtension === 'flac') {
         return `<source src="${baseSrc}" type="audio/flac">
                 <source src="${baseSrc}" type="audio/x-flac">`;
@@ -1567,38 +1102,35 @@
         return `<source src="${baseSrc}" type="audio/mpeg">
                 <source src="${baseSrc}" type="audio/mp3">`;
       } else {
-        // Default fallback for unknown extensions
         return `<source src="${baseSrc}" type="audio/mpeg">
                 <source src="${baseSrc}" type="audio/mp3">`;
       }
     }
 
     function playRecording(filename, channelName) {
-      // Create a modal or popup with audio player
       const audioModal = document.createElement("div");
       audioModal.className = "modal";
       audioModal.style.display = "block";
 
       audioModal.innerHTML = `
-                <div class="modal-content" style="max-width: 500px;">
-                    <div class="modal-header">
-                        <h3>Playing: ${channelName}</h3>
-                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
-                    </div>
-                    <div style="padding: 20px;">
-                        <p style="margin-bottom: 15px; color: #bdc3c7;">${filename}</p>
-                        <div id="audio-status" style="margin-bottom: 10px; color: #3498db; font-size: 14px;">Loading audio...</div>
-                        <audio controls preload="metadata" class="audio-player" id="audio-player-${Date.now()}">
-                            ${getAudioSources(filename)}
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-                </div>
-            `;
+        <div class="modal-content" style="max-width: 500px;">
+          <div class="modal-header">
+            <h3>Playing: ${channelName}</h3>
+            <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+          </div>
+          <div style="padding: 20px;">
+            <p style="margin-bottom: 15px; color: #bdc3c7;">${filename}</p>
+            <div id="audio-status" style="margin-bottom: 10px; color: #3498db; font-size: 14px;">Loading audio...</div>
+            <audio controls preload="metadata" class="audio-player" id="audio-player-${Date.now()}">
+              ${getAudioSources(filename)}
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+      `;
 
       document.body.appendChild(audioModal);
 
-      // Get the audio element and add event listeners
       const audioElement = audioModal.querySelector('audio');
       const statusElement = audioModal.querySelector('#audio-status');
 
@@ -1607,8 +1139,7 @@
         if (duration && !isNaN(duration)) {
           statusElement.textContent = `Duration: ${duration.toFixed(1)}s`;
           statusElement.style.color = '#27ae60';
-          // Auto-play after metadata is loaded
-          audioElement.play().catch(e => {
+          audioElement.play().catch(() => {
             statusElement.textContent = 'Click play to start (autoplay blocked)';
             statusElement.style.color = '#f39c12';
           });
@@ -1631,7 +1162,6 @@
         }
       });
 
-      // Close when clicking outside
       audioModal.onclick = function (event) {
         if (event.target === audioModal) {
           audioModal.remove();
@@ -1681,13 +1211,8 @@
       }
     }
 
-    function startAllRecording() {
-      startRecording();
-    }
-
-    function stopAllRecording() {
-      stopRecording();
-    }
+    function startAllRecording() { startRecording(); }
+    function stopAllRecording() { stopRecording(); }
 
     function downloadRecording(filename) {
       window.open(`/api/recording/${filename}`, "_blank");
@@ -1701,7 +1226,7 @@
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
     }
 
-    // Batch recording selection and playback functions
+    // Batch playback/selection logic unchanged...
     let currentAudioPlayer = null;
     let batchPlaybackQueue = [];
     let currentPlaybackIndex = 0;
@@ -1719,46 +1244,32 @@
       playBatchBtn.disabled = count === 0;
       downloadBatchBtn.disabled = count === 0;
 
-      // Show/hide batch controls based on whether any recordings exist
       const allCheckboxes = document.querySelectorAll('.recording-checkbox');
       batchControls.style.display = allCheckboxes.length > 0 ? 'block' : 'none';
     }
 
     function selectAllRecordings() {
       const checkboxes = document.querySelectorAll('.recording-checkbox');
-      checkboxes.forEach(checkbox => {
-        checkbox.checked = true;
-      });
+      checkboxes.forEach(cb => cb.checked = true);
       updateBatchControls();
     }
 
     function clearSelection() {
       const checkboxes = document.querySelectorAll('.recording-checkbox');
-      checkboxes.forEach(checkbox => {
-        checkbox.checked = false;
-      });
+      checkboxes.forEach(cb => cb.checked = false);
       updateBatchControls();
     }
 
     function playSelectedRecordings() {
       const selectedCheckboxes = document.querySelectorAll('.recording-checkbox:checked');
-      if (selectedCheckboxes.length === 0) {
-        showMessage('Please select recordings to play', 'error');
-        return;
-      }
+      if (selectedCheckboxes.length === 0) { showMessage('Please select recordings to play', 'error'); return; }
 
-      // Build queue of selected recordings with timestamp information
-      const selectedRecordings = Array.from(selectedCheckboxes).map(checkbox => {
-        const filename = checkbox.getAttribute('data-filename');
-        const timestamp = checkbox.getAttribute('data-timestamp');
-
-        //console.log('Raw timestamp for', filename, ':', timestamp);
-
-        // Parse timestamp from YYYYMMDD_HHMMSS format to proper Date
+      const selectedRecordings = Array.from(selectedCheckboxes).map(cb => {
+        const filename = cb.getAttribute('data-filename');
+        const timestamp = cb.getAttribute('data-timestamp');
         let parsedDate;
         try {
           if (timestamp && timestamp.match(/^\d{8}_\d{6}/)) {
-            // Format: YYYYMMDD_HHMMSS
             const year = timestamp.substring(0, 4);
             const month = timestamp.substring(4, 6);
             const day = timestamp.substring(6, 8);
@@ -1767,59 +1278,31 @@
             const second = timestamp.substring(13, 15);
             parsedDate = new Date(year, month - 1, day, hour, minute, second);
           } else {
-            // Fallback to direct parsing
             parsedDate = new Date(timestamp);
           }
         } catch (e) {
-          console.warn('Failed to parse timestamp:', timestamp, e);
-          parsedDate = new Date(0); // Fallback to epoch
+          parsedDate = new Date(0);
         }
-
-        return {
-          filename: filename,
-          timestamp: parsedDate,
-          rawTimestamp: timestamp
-        };
+        return { filename, timestamp: parsedDate, rawTimestamp: timestamp };
       });
 
-      // Sort recordings by timestamp (oldest to newest)
-      selectedRecordings.sort((a, b) => {
-        const result = a.timestamp - b.timestamp;
-        //console.log('Comparing:', a.filename, '(', a.timestamp, ') vs', b.filename, '(', b.timestamp, ') result:', result);
-        return result;
-      });
-
-      // Extract sorted filenames for playback queue
-      batchPlaybackQueue = selectedRecordings.map(recording => recording.filename);
+      selectedRecordings.sort((a, b) => a.timestamp - b.timestamp);
+      batchPlaybackQueue = selectedRecordings.map(r => r.filename);
       currentPlaybackIndex = 0;
-
-      //console.log('Selected recordings with timestamps:', selectedRecordings);
-      //console.log('Playing recordings in chronological order:', batchPlaybackQueue);
-
-      // Start playing the first recording
       playBatchRecording();
     }
 
     function playBatchRecording() {
-      if (currentPlaybackIndex >= batchPlaybackQueue.length) {
-        showMessage('Batch playback completed', 'success');
-        return;
-      }
-
+      if (currentPlaybackIndex >= batchPlaybackQueue.length) { showMessage('Batch playback completed', 'success'); return; }
       const filename = batchPlaybackQueue[currentPlaybackIndex];
       const channelName = currentChannelName || 'Unknown Channel';
 
-      // Remove any existing audio modal
       const existingModal = document.querySelector('.batch-audio-modal');
-      if (existingModal) {
-        existingModal.remove();
-      }
+      if (existingModal) existingModal.remove();
 
-      // Create a modal for batch playback
       const audioModal = document.createElement("div");
       audioModal.className = "modal batch-audio-modal";
       audioModal.style.display = "block";
-
       audioModal.innerHTML = `
         <div class="modal-content" style="max-width: 600px;">
           <div class="modal-header">
@@ -1835,36 +1318,25 @@
             </audio>
             <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: space-between;">
               <div>
-                <button onclick="previousBatchRecording()" ${currentPlaybackIndex === 0 ? 'disabled' : ''} 
-                        class="btn-small btn-info">Previous</button>
-                <button onclick="nextBatchRecording()" 
-                        class="btn-small btn-primary">Next</button>
+                <button onclick="previousBatchRecording()" ${currentPlaybackIndex === 0 ? 'disabled' : ''} class="btn-small btn-info">Previous</button>
+                <button onclick="nextBatchRecording()" class="btn-small btn-primary">Next</button>
               </div>
               <button onclick="stopBatchPlayback()" class="btn-small btn-secondary">Stop Batch</button>
             </div>
           </div>
         </div>
       `;
-
       document.body.appendChild(audioModal);
 
-      // Get the audio element and set up event listeners
       currentAudioPlayer = audioModal.querySelector('audio');
-
       currentAudioPlayer.addEventListener('ended', () => {
         currentPlaybackIndex++;
-        setTimeout(() => {
-          playBatchRecording();
-        }, 500); // Small delay between recordings
+        setTimeout(() => { playBatchRecording(); }, 500);
       });
-
-      currentAudioPlayer.addEventListener('error', (e) => {
-        console.error('Audio playback error:', e);
+      currentAudioPlayer.addEventListener('error', () => {
         showMessage(`Error playing ${filename}`, 'error');
         currentPlaybackIndex++;
-        setTimeout(() => {
-          playBatchRecording();
-        }, 1000);
+        setTimeout(() => { playBatchRecording(); }, 1000);
       });
     }
 
@@ -1884,43 +1356,28 @@
 
     function stopBatchPlayback() {
       const modal = document.querySelector('.batch-audio-modal');
-      if (modal) {
-        modal.remove();
-      }
-      if (currentAudioPlayer) {
-        currentAudioPlayer.pause();
-        currentAudioPlayer = null;
-      }
+      if (modal) modal.remove();
+      if (currentAudioPlayer) { currentAudioPlayer.pause(); currentAudioPlayer = null; }
       batchPlaybackQueue = [];
       currentPlaybackIndex = 0;
     }
 
     function downloadSelectedRecordings() {
       const selectedCheckboxes = document.querySelectorAll('.recording-checkbox:checked');
-      if (selectedCheckboxes.length === 0) {
-        showMessage('Please select recordings to download', 'error');
-        return;
-      }
+      if (selectedCheckboxes.length === 0) { showMessage('Please select recordings to download', 'error'); return; }
 
       if (selectedCheckboxes.length === 1) {
-        // For single file, use regular download
         const filename = selectedCheckboxes[0].getAttribute('data-filename');
         downloadRecording(filename);
         return;
       }
 
-      // Collect selected recordings with timestamps for sorting
-      const selectedRecordings = Array.from(selectedCheckboxes).map(checkbox => {
-        const filename = checkbox.getAttribute('data-filename');
-        const timestamp = checkbox.getAttribute('data-timestamp');
-        
-        //console.log(`Processing selected file: ${filename} with timestamp: ${timestamp}`);
-
-        // Parse timestamp from YYYYMMDD_HHMMSS format to proper Date
+      const selectedRecordings = Array.from(selectedCheckboxes).map(cb => {
+        const filename = cb.getAttribute('data-filename');
+        const timestamp = cb.getAttribute('data-timestamp');
         let parsedDate;
         try {
           if (timestamp && timestamp.match(/^\d{8}_\d{6}/)) {
-            // Format: YYYYMMDD_HHMMSS
             const year = timestamp.substring(0, 4);
             const month = timestamp.substring(4, 6);
             const day = timestamp.substring(6, 8);
@@ -1929,96 +1386,52 @@
             const second = timestamp.substring(13, 15);
             parsedDate = new Date(year, month - 1, day, hour, minute, second);
           } else {
-            // Fallback to direct parsing
             parsedDate = new Date(timestamp);
           }
         } catch (e) {
-          console.warn('Failed to parse timestamp:', timestamp, e);
-          parsedDate = new Date(0); // Fallback to epoch
+          parsedDate = new Date(0);
         }
-
-        return {
-          filename: filename,
-          timestamp: parsedDate,
-          rawTimestamp: timestamp
-        };
+        return { filename, timestamp: parsedDate, rawTimestamp: timestamp };
       });
 
-      // Sort recordings by timestamp (oldest to newest)
       selectedRecordings.sort((a, b) => a.timestamp - b.timestamp);
+      const sortedFilenames = selectedRecordings.map(r => r.filename);
 
-      // Extract sorted filenames
-      const sortedFilenames = selectedRecordings.map(recording => recording.filename);
-      
-      //console.log(`Total selected recordings: ${selectedRecordings.length}`);
-      //console.log('Selected files with details:', selectedRecordings.map(r => ({
-      //  filename: r.filename,
-      //  timestamp: r.timestamp.toISOString(),
-      //  rawTimestamp: r.rawTimestamp
-      //})));
-      //console.log('Final sorted filenames for download:', sortedFilenames);
-
-      // Show confirmation dialog with file list
       const fileListForUser = sortedFilenames.map((f, i) => `${i + 1}. ${f}`).join('\n');
       const confirmed = confirm(
         `You're about to download and concatenate ${selectedRecordings.length} recordings.\n\n` +
         `Files will be combined in chronological order:\n\n${fileListForUser}\n\n` +
         `Continue with download?`
       );
+      if (!confirmed) return;
 
-      if (!confirmed) {
-        //console.log('User cancelled batch download');
-        return;
-      }
-
-      // Show loading message
       showMessage(`Preparing concatenated download of ${selectedRecordings.length} recordings...`, 'info');
 
-      // Disable the download button during processing
       const downloadBtn = document.getElementById('downloadBatchBtn');
       const originalText = downloadBtn.textContent;
       downloadBtn.disabled = true;
       downloadBtn.textContent = 'Processing...';
 
-      // Make API call to concatenate and download
-      const requestData = {
-        files: sortedFilenames,
-        channel_name: currentChannelName || 'mixed'
-      };
+      const requestData = { files: sortedFilenames, channel_name: currentChannelName || 'mixed' };
 
       fetch('/api/concatenate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData)
       })
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         return response.json();
       })
       .then(data => {
-        //console.log('Concatenation response:', data);
-        
         if (data.success) {
-          //console.log(`Successfully concatenated ${data.files_concatenated} files:`);
-          //console.log('Files included:', data.file_list);
-          
-          // Create download link
           const a = document.createElement('a');
           a.href = data.download_url;
           a.download = data.filename;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          
-          showMessage(
-            `Successfully concatenated ${data.files_concatenated} recordings into ${data.filename}. ` +
-            `Files included: ${data.file_list.join(', ')}`, 
-            'success'
-          );
+          showMessage(`Successfully concatenated ${data.files_concatenated} recordings into ${data.filename}. Files included: ${data.file_list.join(', ')}`, 'success');
         } else {
           throw new Error(data.error || 'Unknown error');
         }
@@ -2028,14 +1441,12 @@
         showMessage('Error creating concatenated download: ' + error.message, 'error');
       })
       .finally(() => {
-        // Re-enable the download button
         downloadBtn.disabled = false;
         downloadBtn.textContent = originalText;
-        updateBatchControls(); // Update button state based on current selection
+        updateBatchControls();
       });
     }
   </script>
 
 </body>
-
 </html>

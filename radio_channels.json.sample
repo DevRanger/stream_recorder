@@ -5,7 +5,9 @@
       "url": "https://cast1.sql2.smrn.com/7401/",
       "enabled": true,
       "group": "Fire",
-      "volume_sensitivity": 0.01
+      "volume_sensitivity": 0.01,
+      "username": "",
+      "password": ""
     }
   ]
 }

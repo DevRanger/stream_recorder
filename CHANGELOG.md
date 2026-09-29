@@ -2,6 +2,24 @@
 
 All notable changes to the Radio Stream Recorder project will be documented in this file.
 
+## [1.1.1] - 2025-11-01
+
+**Speed improvements and authentication support**
+
+- Cache `/api/stats` and `/api/channel-minutes` for faster responses  
+- Precompute results in a background thread  
+- Serve cached data instantly (no long waits)  
+- Add `STATS_REFRESH_SEC` (default 30 s)  
+- Use `os.scandir` for faster directory reads  
+- Add optional `username` / `password` fields to `radio_channels.json` for HTTP Basic Auth  
+- Update `audio_recorder.py` to send Basic Auth using `requests.auth.HTTPBasicAuth` if credentials are present  
+- Update `README` with instructions for authentication (credentials can be left blank for public streams)  
+- No behavior change for channels without authentication
+- General code cleanup (helps make it easier to read)
+- Add sorting by group/channel/minutes
+- Fixed recording timestamps (now shown in browser’s local timezone (files still saved in UTC))
+
+
 ## [1.1.0] - 2025-08-31
 
 ### Added
